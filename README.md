@@ -2,6 +2,8 @@
 
 Web design concept for **Frigidaire Tango**, the Italian new wave band from Bassano del Grappa active since 1980. The page presents the new album, news, the band's story, discography, photos, videos and press in a single dark, music-first layout.
 
+URL: https://mildreyruiz-ai.github.io/ciudad-real-turismo-datos/web/
+
 > *Concepto de sitio web para Frigidaire Tango (banda new wave de Bassano del Grappa). Estado: borrador de diseño, no es el sitio oficial.*
 
 **Status:** design concept / draft. This is **not** the band's official website.
