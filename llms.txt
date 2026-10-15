@@ -4,6 +4,7 @@
 
 ## Italiano
 - [La band](https://frigidairetango.com/band.html)
+- [Contatti](https://frigidairetango.com/contact.html)
 - [Body Section (disco)](https://frigidairetango.com/disco-body-section.html)
 - [Fears (disco)](https://frigidairetango.com/disco-fears.html)
 - [Lillusione Del Volo (disco)](https://frigidairetango.com/disco-lillusione-del-volo.html)
@@ -24,12 +25,14 @@
 - [News](https://frigidairetango.com/news.html)
 - [Foto](https://frigidairetango.com/photos.html)
 - [Stampa](https://frigidairetango.com/press.html)
+- [Privacy](https://frigidairetango.com/privacy.html)
 - [Discografia](https://frigidairetango.com/records.html)
 - [Storia](https://frigidairetango.com/story.html)
 - [Video](https://frigidairetango.com/videos.html)
 
 ## English
 - [band](https://frigidairetango.com/en/band.html)
+- [contact](https://frigidairetango.com/en/contact.html)
 - [disco-body-section](https://frigidairetango.com/en/disco-body-section.html)
 - [disco-fears](https://frigidairetango.com/en/disco-fears.html)
 - [disco-lillusione-del-volo](https://frigidairetango.com/en/disco-lillusione-del-volo.html)
@@ -50,6 +53,7 @@
 - [news](https://frigidairetango.com/en/news.html)
 - [photos](https://frigidairetango.com/en/photos.html)
 - [press](https://frigidairetango.com/en/press.html)
+- [privacy](https://frigidairetango.com/en/privacy.html)
 - [records](https://frigidairetango.com/en/records.html)
 - [story](https://frigidairetango.com/en/story.html)
 - [videos](https://frigidairetango.com/en/videos.html)

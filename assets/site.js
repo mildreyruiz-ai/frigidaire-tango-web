@@ -25,7 +25,7 @@ document.querySelectorAll('.yt').forEach(function (b) {
   var I = window.FT_I18N;
   var data = (window.FT_NEWS||[]).slice();
   var root = document.getElementById('archive-root');
-  var SEL = 'h1,h2,h3,h4,p,dt,dd,figcaption,.tag,.eyebrow,.role,.y,.src,.btn,header nav a,blockquote,.meta,.date b,.date span,.press a,.logo,footer div,.rollhead .ct,.rollhead .rsub,.arch-howto,.ytlink,.vid h3,.back,.chl,.more,.tnews .go';
+  var SEL = 'h1,h2,h3,h4,p,dt,dd,figcaption,.tag,.eyebrow,.role,.y,.src,.btn,header nav a,blockquote,.meta,.date b,.date span,.press a,.logo,footer div,.rollhead .ct,.rollhead .rsub,.arch-howto,.ytlink,.vid h3,.back,.chl,.more,.tnews .go,.cform label,.cform button,.cnote,.cinfo h3,.legal a,.priv h3,.priv p,.priv li';
   var MONTHS = { en: ['January','February','March','April','May','June','July','August','September','October','November','December'],
                  it: ['Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno','Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre'] };
   var UI = { en: { none: 'Month not specified', one: ' item', many: ' items', def: 'News', noscript: 'The archive needs JavaScript to be displayed.' },
@@ -181,4 +181,11 @@ document.querySelectorAll('.yt').forEach(function (b) {
     });
   });
 })();
+
+(function(){var f=document.getElementById('cform');if(!f)return;
+f.addEventListener('submit',function(e){e.preventDefault();
+var v=function(i){return (document.getElementById(i).value||'').trim()};
+var sub=v('cf-subject')||'Frigidaire Tango';
+var body=v('cf-msg')+'\n\n'+v('cf-name')+'\n'+v('cf-email');
+location.href='mailto:info@frigidairetango.com?subject='+encodeURIComponent(sub)+'&body='+encodeURIComponent(body);});})();
 
