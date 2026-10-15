@@ -332,6 +332,8 @@ footer .legal{margin-top:6px}
 .pagehead .sub{margin:0}
 #story:has(.pagehead){padding-top:0}
 
+.back-bottom{margin:28px 0 0}
+
 /* ===== multi-page additions ===== */
 .bar nav a[aria-current=page]{color:var(--ink);box-shadow:0 2px 0 var(--red);padding-bottom:3px}
 .sechead{display:flex;align-items:baseline;justify-content:space-between;gap:16px;flex-wrap:wrap;margin-bottom:18px}
