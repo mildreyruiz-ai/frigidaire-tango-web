@@ -7,7 +7,7 @@ document.querySelectorAll('.yt').forEach(function (b) {
   var watch = 'https://www.youtube.com/watch?v=' + id;
   var link = document.createElement('a');
   link.href = watch; link.target = '_blank'; link.rel = 'noopener';
-  link.className = 'ytlink'; link.textContent = 'Watch on YouTube ↗';
+  link.className = 'ytlink'; link.textContent = document.documentElement.lang === 'it' ? 'Guarda su YouTube ↗' : 'Watch on YouTube ↗';
   b.parentNode.appendChild(link);
   b.addEventListener('click', function () {
     if (isLocal) { window.open(watch, '_blank', 'noopener'); return; }
@@ -25,7 +25,7 @@ document.querySelectorAll('.yt').forEach(function (b) {
   var I = window.FT_I18N;
   var data = (window.FT_NEWS||[]).slice();
   var root = document.getElementById('archive-root');
-  var SEL = 'h1,h2,h3,h4,p,dt,dd,figcaption,.tag,.eyebrow,.role,.y,.src,.btn,header nav a,blockquote,.meta,.date b,.date span,.press a,.logo,footer div,.arch-howto,.ytlink,.vid h3';
+  var SEL = 'h1,h2,h3,h4,p,dt,dd,figcaption,.tag,.eyebrow,.role,.y,.src,.btn,header nav a,blockquote,.meta,.date b,.date span,.press a,.logo,footer div,.rollhead .ct,.rollhead .rsub,.arch-howto,.ytlink,.vid h3,.back,.chl,.more,.tnews .go';
   var MONTHS = { en: ['January','February','March','April','May','June','July','August','September','October','November','December'],
                  it: ['Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno','Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre'] };
   var UI = { en: { none: 'Month not specified', one: ' item', many: ' items', def: 'News', noscript: 'The archive needs JavaScript to be displayed.' },
@@ -61,7 +61,10 @@ document.querySelectorAll('.yt').forEach(function (b) {
       var n = document.createElement('span');
       n.className = 'n';
       n.textContent = g.items.length + (g.items.length === 1 ? UI[lang].one : UI[lang].many);
-      sum.appendChild(n); det.appendChild(sum);
+      sum.appendChild(n);
+      var pv = document.createElement('span'); pv.className = 'pv';
+      pv.textContent = g.items.map(function (it) { return (L && it.title_it) ? it.title_it : it.title; }).join('  ·  ');
+      sum.appendChild(pv); det.appendChild(sum);
       var lastM = null, ul = null;
       g.items.forEach(function (it) {
         var p = parts(it.date);
@@ -130,17 +133,52 @@ document.querySelectorAll('.yt').forEach(function (b) {
     renderArchive();
     try { localStorage.setItem('ft-lang', l); } catch (e) {}
   }
-  document.querySelectorAll('.lang button').forEach(function (b) {
-    b.addEventListener('click', function () {
-      setLang(b.dataset.lang);
-      try { var u = new URL(location.href); u.searchParams.set('lang', b.dataset.lang); history.replaceState(null, '', u); } catch (e) {}
+  lang = document.documentElement.lang === 'it' ? 'it' : 'en';
+  renderArchive();
+})();
+
+(function () {
+  var rolls = document.querySelectorAll('.roll');
+  if (!rolls.length || !window.HTMLDialogElement) return;
+  var dlg, img, cap, cnt, cur = null, idx = 0, list = [];
+  function T(en, it) { return document.documentElement.lang === 'it' ? it : en; }
+  function build() {
+    dlg = document.createElement('dialog'); dlg.className = 'lb';
+    dlg.innerHTML = '<button class="lb-x" type="button"></button><button class="lb-p" type="button"></button><button class="lb-n" type="button"></button><figure><img alt=""><figcaption><span class="lb-c"></span><span class="lb-k"></span></figcaption></figure>';
+    document.body.appendChild(dlg);
+    img = dlg.querySelector('img'); cap = dlg.querySelector('.lb-c'); cnt = dlg.querySelector('.lb-k');
+    dlg.querySelector('.lb-x').onclick = function () { dlg.close(); };
+    dlg.querySelector('.lb-p').onclick = function () { go(-1); };
+    dlg.querySelector('.lb-n').onclick = function () { go(1); };
+    dlg.addEventListener('click', function (e) { if (e.target === dlg || e.target.tagName === 'FIGURE') dlg.close(); });
+    dlg.addEventListener('keydown', function (e) { if (e.key === 'ArrowLeft') { e.preventDefault(); go(-1); } else if (e.key === 'ArrowRight') { e.preventDefault(); go(1); } });
+    var x0 = null;
+    dlg.addEventListener('touchstart', function (e) { x0 = e.touches[0].clientX; }, { passive: true });
+    dlg.addEventListener('touchend', function (e) { if (x0 === null) return; var dx = e.changedTouches[0].clientX - x0; x0 = null; if (Math.abs(dx) > 50) go(dx < 0 ? 1 : -1); });
+    dlg.addEventListener('close', function () { if (cur) { var a = list[idx]; if (a) a.focus({ preventScroll: true }); } cur = null; });
+  }
+  function labels() {
+    dlg.querySelector('.lb-x').setAttribute('aria-label', T('Close', 'Chiudi'));
+    dlg.querySelector('.lb-p').setAttribute('aria-label', T('Previous photo', 'Foto precedente'));
+    dlg.querySelector('.lb-n').setAttribute('aria-label', T('Next photo', 'Foto successiva'));
+    dlg.querySelector('.lb-x').textContent = '×'; dlg.querySelector('.lb-p').textContent = '‹'; dlg.querySelector('.lb-n').textContent = '›';
+  }
+  function show() {
+    var a = list[idx], im = a.querySelector('img'), fc = a.parentNode.querySelector('figcaption');
+    img.src = a.getAttribute('href'); img.alt = im ? im.alt : '';
+    cap.textContent = fc ? fc.textContent : ''; cnt.textContent = (idx + 1) + ' / ' + list.length;
+    [1, -1].forEach(function (d) { var n = list[(idx + d + list.length) % list.length]; var p = new Image(); p.src = n.getAttribute('href'); });
+    a.scrollIntoView({ block: 'nearest', inline: 'center' });
+  }
+  function go(d) { idx = (idx + d + list.length) % list.length; show(); }
+  rolls.forEach(function (r) {
+    r.addEventListener('click', function (e) {
+      var a = e.target.closest('a.fr'); if (!a) return;
+      e.preventDefault();
+      if (!dlg) build(); labels();
+      cur = r; list = Array.prototype.slice.call(r.querySelectorAll('a.fr')); idx = list.indexOf(a);
+      show(); dlg.showModal();
     });
   });
-  var want = null;
-  try { want = new URLSearchParams(location.search).get('lang'); } catch (e) {}
-  if (!want) { try { want = localStorage.getItem('ft-lang'); } catch (e) {} }
-  if (!want) want = 'it';
-  renderArchive();
-  setLang(want === 'it' ? 'it' : 'en');
 })();
 

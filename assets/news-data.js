@@ -62,55 +62,5 @@ window.FT_NEWS=[
     "kind_it": "Stampa",
     "title_it": "Indie for Bunnies: la band torna con \"Fears\"",
     "text_it": "Articolo sul singolo che ha annunciato il nuovo album."
-  },
-  {
-    "date": "2016",
-    "kind": "Press",
-    "title": "VICE Italia: I'll do it with a Frigidaire Tango",
-    "text": "A long read on the band's full story.",
-    "url": "https://www.vice.com/it/article/frigidaire-tango-storia/",
-    "kind_it": "Stampa",
-    "title_it": "VICE Italia: Lo faccio con un Frigidaire Tango",
-    "text_it": "Un lungo articolo sulla storia completa della band."
-  },
-  {
-    "date": "2013",
-    "kind": "Press",
-    "title": "OndaRock reviews the tribute album",
-    "text": "Rated 7/10.",
-    "url": "https://www.ondarock.it/recensioni/2013_aavv_frigidairetango/",
-    "kind_it": "Stampa",
-    "title_it": "OndaRock recensisce l'album tributo",
-    "text_it": "Voto 7/10."
-  },
-  {
-    "date": "2013",
-    "kind": "Press",
-    "title": "Chain D.L.K. reviews The Original Demotape 1980",
-    "text": "Rated 4.5/5.",
-    "url": "https://www.chaindlk.com/reviews/7661",
-    "kind_it": "Stampa",
-    "title_it": "Chain D.L.K. recensisce The Original Demotape 1980",
-    "text_it": "Voto 4,5/5."
-  },
-  {
-    "date": "2010",
-    "kind": "Press",
-    "title": "OndaRock interview: Il ritorno del tango congelato",
-    "text": "The band on reopening the drawers and finding interesting material.",
-    "url": "https://www.ondarock.it/interviste/frigidairetango/",
-    "kind_it": "Stampa",
-    "title_it": "Intervista di OndaRock: Il ritorno del tango congelato",
-    "text_it": "La band racconta di aver riaperto i cassetti e trovato materiale interessante."
-  },
-  {
-    "date": "2009",
-    "kind": "Press",
-    "title": "OndaRock reviews L'illusione del volo",
-    "text": "Rated 6.5/10.",
-    "url": "https://www.ondarock.it/recensioni/2009_frigidairetango.htm",
-    "kind_it": "Stampa",
-    "title_it": "OndaRock recensisce L'illusione del volo",
-    "text_it": "Voto 6,5/10."
   }
 ];
