@@ -423,3 +423,17 @@ dialog.lb .lb-x{top:12px;right:14px}.lb-p{left:12px;top:50%}.lb-n{right:12px;top
 .tnews .timgs.two img{min-width:0;width:auto;height:auto;aspect-ratio:auto;object-fit:cover;flex:1 1 0}
 .tnews .timgs.two img:first-child{flex-grow:1000;aspect-ratio:1/1}
 .tnews .timgs.two img:last-child{flex-grow:799;aspect-ratio:1000/1252}
+.tnews.feat{padding:32px;gap:36px;grid-template-columns:minmax(0,1.5fr) minmax(0,1fr);border-color:var(--red)}
+.tnews.feat h3{font-size:clamp(32px,4.4vw,54px)}
+.tnews h3 .r{color:var(--red)}
+.tnews.feat p{font-size:18px;line-height:1.5}
+.tnews.feat .go{font-size:13px}
+.tnews.feat .timgs.two{gap:14px}
+@media(max-width:900px){.tnews.feat{padding:20px;gap:20px;grid-template-columns:1fr}}
+.tnews:not(.feat){padding:12px;gap:18px;grid-template-columns:minmax(0,.7fr) minmax(0,1fr)}
+.tnews:not(.feat) .timgs{gap:5px}
+.tnews:not(.feat) .timgs img{aspect-ratio:3/2}
+.tnews:not(.feat) .timgs img.big{aspect-ratio:auto}
+.tnews:not(.feat) h3{font-size:clamp(22px,2.6vw,30px);margin:8px 0 6px}
+.tnews:not(.feat) p{font-size:14px}
+@media(max-width:900px){.tnews:not(.feat){grid-template-columns:1fr}.tnews:not(.feat) .timgs{max-width:420px}}
