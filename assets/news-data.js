@@ -6,11 +6,11 @@ window.FT_NEWS=[
     "date": "2026-10-31",
     "kind": "Concert",
     "title": "The Fleshtones at the Capitol in Pordenone, with The Vindicators opening",
-    "text": "31 October 2026: the Fleshtones' 50th anniversary show, with The Vindicators (Carlo Casale and Stefano Dal Col) as the opening act.",
+    "text": "31 October 2026: the Fleshtones' 50th anniversary show, with The Vindicators (Charlie Out and Stewie DC) as the opening act.",
     "url": "#fleshtones-pordenone",
     "kind_it": "Concerto",
     "title_it": "The Fleshtones al Capitol di Pordenone, aprono The Vindicators",
-    "text_it": "31 ottobre 2026: il concerto per i 50 anni dei Fleshtones, con i Vindicators (Carlo Casale e Stefano Dal Col) in apertura."
+    "text_it": "31 ottobre 2026: il concerto per i 50 anni dei Fleshtones, con i Vindicators (Charlie Out e Stewie DC) in apertura."
   },
   {
     "date": "2026-10-09",
