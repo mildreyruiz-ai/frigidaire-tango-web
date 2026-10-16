@@ -187,5 +187,5 @@ f.addEventListener('submit',function(e){e.preventDefault();
 var v=function(i){return (document.getElementById(i).value||'').trim()};
 var sub=v('cf-subject')||'Frigidaire Tango';
 var body=v('cf-msg')+'\n\n'+v('cf-name')+'\n'+v('cf-email');
-location.href='mailto:info@frigidairetango.com?subject='+encodeURIComponent(sub)+'&body='+encodeURIComponent(body);});})();
+location.href='mailto:Frigidaire%20Tango%20%3Cchichoi60@gmail.com%3E?subject='+encodeURIComponent(sub)+'&body='+encodeURIComponent(body);});})();
 
