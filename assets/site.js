@@ -86,9 +86,10 @@ document.querySelectorAll('.yt').forEach(function (b) {
         kind.textContent = (L && it.kind_it) || it.kind || UI[lang].def;
         h4.appendChild(kind);
         var title = (L && it.title_it) || it.title;
-        if (it.url) {
-          var a = document.createElement('a'); a.href = it.url; a.textContent = title;
-          if (/^https?:/.test(it.url)) { a.target = '_blank'; a.rel = 'noopener'; }
+        var uu = (L && it.url_it) || it.url;
+        if (uu) {
+          var a = document.createElement('a'); a.href = uu; a.textContent = title;
+          if (/^https?:/.test(uu)) { a.target = '_blank'; a.rel = 'noopener'; }
           h4.appendChild(a);
         } else { h4.appendChild(document.createTextNode(title)); }
         body.appendChild(h4);

@@ -400,3 +400,26 @@ dialog.lb button{position:absolute;background:rgba(0,0,0,.5);border:1px solid #3
 dialog.lb button:hover,dialog.lb button:focus-visible{border-color:var(--ice);outline:none}
 dialog.lb .lb-x{top:12px;right:14px}.lb-p{left:12px;top:50%}.lb-n{right:12px;top:50%}
 @media(max-width:700px){dialog.lb figure{padding:60px 8px 14px}dialog.lb .lb-p,dialog.lb .lb-n{top:auto;bottom:14px}dialog.lb .lb-p{left:14px}dialog.lb .lb-n{right:14px}.rollhead .ct{margin-left:0}}
+
+/* note: event news (Fleshtones, Pordenone) */
+.recap .copy h4{font:500 12px var(--mono);letter-spacing:.14em;text-transform:uppercase;color:var(--ice);margin:30px 0 8px}
+.recap .copy .lineh{font:500 12px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);margin:18px 0 0}
+.recap .copy .lineup{margin:6px 0 0}
+.recap .copy .srcline{font-size:13px;color:var(--muted);margin-top:14px}
+.recap .recap-photos.evside{display:block}
+.recap .recap-photos.evside figure.poster img{aspect-ratio:1/1;object-fit:contain;width:100%;height:auto;background:#0a0a0a}
+.recap .evfacts{margin-top:20px}
+.recap .evfacts .facts2{margin:0 0 16px}
+.recap .evfacts .btns{margin:0 0 12px}
+.recap .evfacts .evnote{font-size:12px;color:var(--muted);margin:0}
+.recap.pagebody{margin-top:24px;border-top:0;padding-top:0}
+.tnews .timgs.one{grid-template-columns:1fr}
+.tnews .timgs.one img{aspect-ratio:1/1;width:100%;max-width:340px;height:auto;margin:0 auto;object-fit:contain}
+.tnews + .tnews{margin-top:18px}
+.recap .copy .vphoto{margin:0 0 18px}
+.recap .copy .vphoto img{width:100%;max-width:460px;height:auto;display:block;border:1px solid var(--line,#222)}
+.recap .copy .vphoto figcaption{font:12px var(--mono);color:var(--muted);margin-top:6px}
+.tnews .timgs.two{display:flex;align-items:flex-start;gap:10px}
+.tnews .timgs.two img{min-width:0;width:auto;height:auto;aspect-ratio:auto;object-fit:cover;flex:1 1 0}
+.tnews .timgs.two img:first-child{flex-grow:1000;aspect-ratio:1/1}
+.tnews .timgs.two img:last-child{flex-grow:799;aspect-ratio:1000/1252}

@@ -3,11 +3,22 @@
    For the Italian version add title_it, text_it, kind_it. Order does not matter. */
 window.FT_NEWS=[
   {
+    "date": "2026-10-31",
+    "kind": "Concert",
+    "title": "The Fleshtones at the Capitol in Pordenone, with The Vindicators opening",
+    "text": "31 October 2026: the Fleshtones' 50th anniversary show, with The Vindicators (Carlo Casale and Stefano Dal Col) as the opening act.",
+    "url": "#fleshtones-pordenone",
+    "kind_it": "Concerto",
+    "title_it": "The Fleshtones al Capitol di Pordenone, aprono The Vindicators",
+    "text_it": "31 ottobre 2026: il concerto per i 50 anni dei Fleshtones, con i Vindicators (Carlo Casale e Stefano Dal Col) in apertura."
+  },
+  {
     "date": "2026-10-09",
     "kind": "Launch",
     "title": "Book launch at Libreria Palazzo Roberti",
     "text": "A full house at Libreria Palazzo Roberti for Carlo Casale's book presentation in Bassano del Grappa, followed by a listening of Modern Vintage Wave at Pick Up Records.",
-    "url": "#launch-report",
+    "url": "news-book-launch.html",
+    "url_it": "news-presentazione-libro.html",
     "kind_it": "Presentazione",
     "title_it": "Presentazione del libro alla Libreria Palazzo Roberti",
     "text_it": "Sala piena alla Libreria Palazzo Roberti per il libro di Carlo Casale, seguita da un ascolto di Modern Vintage Wave al Pick Up Records."
