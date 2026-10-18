@@ -1,3 +1,29 @@
+// Keep proper names (people, nicknames, bands, titles, labels, venues) out of
+// automatic page translation, also in text that this script builds on the fly.
+var FT_NAMES = ["Lo faccio con un Frigidaire Tango", "Il ritorno del tango congelato", "Rockgarage Compilation Vol. 2", "Rockgarage Compilation Vol. 4", "Risuonano i Frigidaire Tango", "The Original Demotape 1980", "Libreria Palazzo Roberti", "Russian Dolls – Part Two", "The Romantic Life-Guard", "The romantic life-guard", "Live in Barcelona 1985", "Rockgarage Compilation", "The Romantic Lifeguard", "Amnesty International", "Clare Anne Matz Dance", "Do you remember Roxy?", "Life Is A Little Trip", "Life Is a Little Trip", "Non sei raggiungibile", "Capitol di Pordenone", "Electric Eye Records", "L'illusione del volo", "Maurizio Battistella", "Ceccon photosession", "Modern Vintage Wave", "via Jacopo da Ponte", "Antonio Bacciocchi", "Bassano del Grappa", "Carrozzeria Casale", "Fiorenzuola D'Arda", "Gianpaolo Giacobbo", "La Tempesta Dischi", "Margherita Orlandi", "Aldo Tagliapietra", "Art Music Service", "Capitol Pordenone", "Chemical Brothers", "Edizioni Interno4", "Filippo Bordignon", "Francesco Nicolli", "Gli altri Ottanta", "Indie for Bunnies", "Interno4 Edizioni", "Jacopo Rondinelli", "L'ultimo concerto", "Live in Barcelona", "Original Demotape", "Palestra Comunale", "Synthetic Shadows", "Take Over From Me", "Una vita dal vivo", "Art Music Studio", "European Affairs", "FRIGIDAIRE TANGO", "Federico Fiumani", "Frigidaire Tango", "J.M. Le Baptiste", "Materiali Sonori", "Maximum Festival", "Peppo Bianchessi", "Roots Revolution", "Teatro Remondini", "Art Music Group", "Camilla Fascina", "Fernando Viktor", "Go Down Records", "Ibrahim Baseado", "Pick Up Records", "Piergiorgio Gay", "Spittle Records", "Stefano Dal Col", "Stefano Poletti", "That's All Rock", "The Freezer Box", "The Vindicators", "Timeless Future", "Villa Trevisani", "Adrian Borland", "Black Curtains", "Blues Brothers", "Considerations", "Dangerous Echo", "Diego Negrello", "Fabio Trentini", "Franco Turesso", "Giorgio Canali", "JM Le Baptiste", "Kirlian Camera", "Livia Satriano", "Mostafa Barhmi", "Rolling Stones", "Sound & Vision", "Teatro Ariston", "The COCK Album", "The Fleshtones", "Via G. Mazzini", "Xabier Iriondo", "Bill Milhizer", "Button Studio", "Deadline Body", "Greatest Hits", "Javier Torres", "Marco De Vidi", "Modern's club", "My Heart Brut", "Natural mente", "On the Rocks!", "Orecchiocchio", "Russian Dolls", "Young Records", "Ahmed Barhmi", "Albert Elbow", "Alma Records", "Alta Fedeltà", "Amazon Music", "Avion Travel", "Bloody Glory", "Body Section", "Carlo Casale", "Chain D.L.K.", "Diego Galeri", "Diego Piotto", "Driss Barhmi", "Frank Tourak", "Google Fonts", "Ilenia Volpe", "Keith Streng", "Mark Charles", "Mildrey Ruiz", "Music For Us", "Music for Us", "Serendeepity", "Sick Tamburo", "Tagliapietra", "Uber Cavalli", "Alex Redsea", "Apple Music", "Arezzo Wave", "Blue & Pink", "Charlie Out", "Cinema Luna", "Dave Nigger", "Freezer Box", "Google Maps", "La Tempesta", "Le Baptiste", "Luca Frazzi", "Manila Club", "Marco Breda", "Marco Greco", "Mark Brenda", "Metallus.it", "Paul Milanì", "San Giorgio", "Shindy Club", "Steve Elbow", "VICE Italia", "Vanity Fair", "Vindicators", "Zero Branco", "Alex Strax", "Arena 2000", "Cloudflare", "Dazed Life", "Diskogenia", "Fleshtones", "Frigidaire", "I Creatori", "Insecurity", "New Design", "P.E.A.C.E.", "Psicolabel", "Rockerilla", "Rockgarage", "Rumore 100", "SoundCloud", "Tendencias", "Agenzia X", "Art Music", "Bordignon", "Cadoneghe", "Cold Furs", "Diaframma", "Dreamcity", "FT Studio", "Instagram", "La Gabbia", "Longarone", "Oversouls", "Pordenone", "Radio Rai", "Radiocoop", "Stewie DC", "The First", "The Sound", "The Trash", "Bandcamp", "Die Form", "Diego P8", "Facebook", "Fardrock", "Interno4", "Marghera", "Miss Xox", "New York", "OndaRock", "Politrio", "Soundohm", "The Cock", "Amnesty", "Bassano", "Campese", "Capitol", "Cassola", "Dal Col", "Discogs", "Fiumani", "Gomiero", "Healthy", "L'ombra", "Le Orme", "Litfiba", "MASO EP", "Outkids", "Presage", "Spotify", "Timoria", "Treviso", "Voghera", "YouTube", "Adrian", "Brenda", "C.G.D.", "Casale", "Cazale", "Ceccon", "Deezer", "Feltre", "Franti", "Galeri", "IBS.it", "Le Roi", "My Way", "Naples", "Napoli", "Recall", "Rockit", "Rumore", "Shindy", "Soffia", "Thiene", "Trento", "Carlo", "Fears", "Miura", "RAI 1", "SPRAY", "TRASH", "Trash", "Tsugi", "CCCP", "COCK", "EELP", "MASO", "Nove", "Push", "Roxy", "RAI", "Slego", "Velvet", "Big Club", "Cinema Bersaglieri", "Teatro Pio X", "Palasport", "SPA Bikini Club", "Taxi Club", "Cinema Grotta", "Sporting Club", "Crushers", "Dueville", "Belvedere di Tezze", "Spinea", "Padova", "Torino", "Rimini", "Montebelluna", "Mirano", "Barcelona"];
+var FT_NAME_RE = new RegExp('(^|[^\\w])(' + FT_NAMES.map(function (n) {
+  return n.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}).join('|') + ')(?![\\w])', 'g');
+function ftProtectNames(root) {
+  var w = document.createTreeWalker(root, NodeFilter.SHOW_TEXT, null), nodes = [], n;
+  while ((n = w.nextNode())) nodes.push(n);
+  nodes.forEach(function (t) {
+    if (t.parentNode.closest('[translate="no"]')) return;
+    var s = t.nodeValue, m, last = 0, frag = document.createDocumentFragment(), hit = false;
+    FT_NAME_RE.lastIndex = 0;
+    while ((m = FT_NAME_RE.exec(s))) {
+      var start = m.index + m[1].length;
+      if (start > last) frag.appendChild(document.createTextNode(s.slice(last, start)));
+      var sp = document.createElement('span');
+      sp.setAttribute('translate', 'no'); sp.textContent = m[2];
+      frag.appendChild(sp); last = start + m[2].length; hit = true;
+    }
+    if (!hit) return;
+    if (last < s.length) frag.appendChild(document.createTextNode(s.slice(last)));
+    t.parentNode.replaceChild(frag, t);
+  });
+}
+
 // YouTube refuses to play embedded videos on a page opened straight from the
 // computer (file://), so in that case open the video on YouTube instead.
 // Once the page is on a real web address, videos play inside the page.
@@ -100,6 +126,7 @@ document.querySelectorAll('.yt').forEach(function (b) {
       });
       root.appendChild(det);
     });
+    ftProtectNames(root);
   }
 
   var enTitle = document.title, metaD = document.querySelector('meta[name=description]'), enDesc = metaD ? metaD.content : '';
@@ -167,7 +194,7 @@ document.querySelectorAll('.yt').forEach(function (b) {
   function show() {
     var a = list[idx], im = a.querySelector('img'), fc = a.parentNode.querySelector('figcaption');
     img.src = a.getAttribute('href'); img.alt = im ? im.alt : '';
-    cap.textContent = fc ? fc.textContent : ''; cnt.textContent = (idx + 1) + ' / ' + list.length;
+    cap.textContent = fc ? fc.textContent : ''; ftProtectNames(cap); cnt.textContent = (idx + 1) + ' / ' + list.length;
     [1, -1].forEach(function (d) { var n = list[(idx + d + list.length) % list.length]; var p = new Image(); p.src = n.getAttribute('href'); });
     a.scrollIntoView({ block: 'nearest', inline: 'center' });
   }
