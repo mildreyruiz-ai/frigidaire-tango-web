@@ -1,14 +1,7 @@
+# Frigidaire Tango
+# Tutti i crawler sono benvenuti: motori di ricerca, risposte IA e addestramento.
 User-agent: *
-Allow: /
-
-# AI / answer-engine crawlers are welcome
-User-agent: GPTBot
-Allow: /
-User-agent: ClaudeBot
-Allow: /
-User-agent: PerplexityBot
-Allow: /
-User-agent: Google-Extended
+Content-Signal: search=yes, ai-input=yes, ai-train=yes
 Allow: /
 
 Sitemap: https://frigidairetango.com/sitemap.xml
