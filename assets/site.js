@@ -190,3 +190,30 @@ var sub=v('cf-subject')||'Frigidaire Tango';
 var body=v('cf-msg')+'\n\n'+v('cf-name')+'\n'+v('cf-email');
 location.href='mailto:Frigidaire%20Tango%20%3Cchichoi60@gmail.com%3E?subject='+encodeURIComponent(sub)+'&body='+encodeURIComponent(body);});})();
 
+
+/* Photos page: year timeline scroll-spy */
+(function () {
+  var links = [].slice.call(document.querySelectorAll('.yrs a'));
+  if (!links.length) return;
+  var secs = [].slice.call(document.querySelectorAll('.rollsec[id^="y"]'));
+  var bar = document.querySelector('.bar'), tl = document.querySelector('.yrs'), raf = 0;
+  function mark() {
+    raf = 0;
+    var line = bar.offsetHeight + tl.offsetHeight + 24, cur = secs.length ? secs[0].id.split('-')[0] : null;
+    secs.forEach(function (s) { if (s.getBoundingClientRect().top <= line) cur = s.id.split('-')[0]; });
+    links.forEach(function (a) { a.setAttribute('aria-current', cur && a.getAttribute('href') === '#' + cur ? 'true' : 'false'); });
+  }
+  function req() { if (!raf) raf = requestAnimationFrame(mark); }
+  window.addEventListener('scroll', req, { passive: true });
+  window.addEventListener('resize', req);
+  mark();
+})();
+
+/* Sticky offset: year timeline sits right under the sticky header */
+(function () {
+  var bar = document.querySelector('.bar');
+  if (!bar || !document.querySelector('.yrs')) return;
+  function set() { document.documentElement.style.setProperty('--barh', bar.offsetHeight + 'px'); }
+  set(); window.addEventListener('resize', set);
+  if ('ResizeObserver' in window) new ResizeObserver(set).observe(bar);
+})();
