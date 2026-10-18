@@ -172,7 +172,7 @@ document.querySelectorAll('.yt').forEach(function (b) {
   function T(en, it) { return document.documentElement.lang === 'it' ? it : en; }
   function build() {
     dlg = document.createElement('dialog'); dlg.className = 'lb';
-    dlg.innerHTML = '<button class="lb-x" type="button"></button><button class="lb-p" type="button"></button><button class="lb-n" type="button"></button><figure><img alt=""><figcaption><span class="lb-c"></span><span class="lb-k"></span></figcaption></figure>';
+    dlg.innerHTML = '<button class="lb-x" type="button"></button><button class="lb-p" type="button"></button><button class="lb-n" type="button"></button><figure><img alt=""><figcaption translate="no"><span class="lb-c"></span><span class="lb-k"></span></figcaption></figure>';
     document.body.appendChild(dlg);
     img = dlg.querySelector('img'); cap = dlg.querySelector('.lb-c'); cnt = dlg.querySelector('.lb-k');
     dlg.querySelector('.lb-x').onclick = function () { dlg.close(); };
