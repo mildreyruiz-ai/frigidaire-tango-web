@@ -476,3 +476,4 @@ dialog.lb .lb-x{top:12px;right:14px}.lb-p{left:12px;top:50%}.lb-n{right:12px;top
 .eras a[aria-current=page]{background:var(--ice);border-color:var(--ice);color:#000}
 .eras a:focus-visible{outline:2px solid var(--ice);outline-offset:3px}
 .erasend{padding:34px 0 46px;border-top:1px solid var(--line)}
+.story .pull{font:italic 500 clamp(20.7px,2.3vw,25.7px)/1.35 "Playfair Display",Georgia,"Times New Roman",serif;letter-spacing:.005em}
