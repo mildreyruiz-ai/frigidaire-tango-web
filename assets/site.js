@@ -229,7 +229,34 @@ location.href='mailto:Frigidaire%20Tango%20%3Cchichoi60@gmail.com%3E?subject='+e
     var line = bar.offsetHeight + tl.offsetHeight + 24, cur = secs.length ? secs[0].id.split('-')[0] : null;
     secs.forEach(function (s) { if (s.getBoundingClientRect().top <= line) cur = s.id.split('-')[0]; });
     links.forEach(function (a) { a.setAttribute('aria-current', cur && a.getAttribute('href') === '#' + cur ? 'true' : 'false'); });
+    follow();
   }
+  /* Year bar overflow: edge arrows (only when more years are hidden) + follow the active year */
+  var ol = tl.querySelector('ol'), box = tl.querySelector('.wrap');
+  var aL = document.createElement('button'), aR = document.createElement('button');
+  function lab(d) { return document.documentElement.lang === 'it' ? (d < 0 ? 'Anni precedenti' : 'Anni successivi') : (d < 0 ? 'Earlier years' : 'Later years'); }
+  [[aL, -1, 'l', 'M15 4l-8 8 8 8'], [aR, 1, 'r', 'M9 4l8 8-8 8']].forEach(function (x) {
+    var b = x[0]; b.type = 'button'; b.className = 'yrs-arr ' + x[2]; b.setAttribute('aria-label', lab(x[1]));
+    b.innerHTML = '<svg viewBox="0 0 24 24" aria-hidden="true"><path d="' + x[3] + '"/></svg>';
+    b.addEventListener('click', function () { ol.scrollBy({ left: x[1] * ol.clientWidth * 0.7, behavior: 'smooth' }); });
+    box.appendChild(b);
+  });
+  function arrows() {
+    var max = ol.scrollWidth - ol.clientWidth;
+    aL.classList.toggle('on', ol.scrollLeft > 4); aR.classList.toggle('on', ol.scrollLeft < max - 4);
+    aL.tabIndex = aL.classList.contains('on') ? 0 : -1; aR.tabIndex = aR.classList.contains('on') ? 0 : -1;
+  }
+  ol.addEventListener('scroll', arrows, { passive: true });
+  window.addEventListener('resize', arrows);
+  if ('ResizeObserver' in window) new ResizeObserver(arrows).observe(ol);
+  var lastCur = null;
+  function follow() {
+    var a = links.filter(function (l) { return l.getAttribute('aria-current') === 'true'; })[0];
+    if (!a || a === lastCur) return; lastCur = a;
+    var li = a.parentNode, target = li.offsetLeft - (ol.clientWidth - li.offsetWidth) / 2;
+    ol.scrollTo({ left: Math.max(0, target), behavior: 'smooth' });
+  }
+  arrows();
   function req() { if (!raf) raf = requestAnimationFrame(mark); }
   window.addEventListener('scroll', req, { passive: true });
   window.addEventListener('resize', req);

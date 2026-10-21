@@ -453,9 +453,26 @@ dialog.lb .lb-x{top:12px;right:14px}.lb-p{left:12px;top:50%}.lb-n{right:12px;top
 .yrs a[aria-current=true]{color:var(--ink)}
 .yrs a[aria-current=true]::before{background:var(--red);border-color:var(--red);transform:scale(1.25)}
 .yrs a:focus-visible{outline:2px solid var(--ice);outline-offset:-2px}
+.yrs .wrap{position:relative}
+.yrs-arr{position:absolute;top:0;bottom:0;width:44px;display:flex;align-items:center;border:0;margin:0;padding:0;cursor:pointer;color:var(--ice);z-index:3;opacity:0;pointer-events:none;transition:opacity .2s}
+.yrs-arr.on{opacity:1;pointer-events:auto}
+.yrs-arr svg{width:18px;height:18px;fill:none;stroke:currentColor;stroke-width:2.6;stroke-linecap:round;stroke-linejoin:round;filter:drop-shadow(0 0 4px #000)}
+.yrs-arr.l{left:0;justify-content:flex-start;padding-left:4px;background:linear-gradient(90deg,#000 35%,rgba(0,0,0,0))}
+.yrs-arr.r{right:0;justify-content:flex-end;padding-right:4px;background:linear-gradient(270deg,#000 35%,rgba(0,0,0,0))}
+.yrs-arr:hover,.yrs-arr:focus-visible{color:#fff}
+.yrs-arr:focus-visible{outline:2px solid var(--ice);outline-offset:-3px}
+@media (prefers-reduced-motion:reduce){.yrs-arr{transition:none}}
 .rollsec{scroll-margin-top:110px}
 @media (max-width:900px){.rollsec{scroll-margin-top:150px}}
 @media (prefers-reduced-motion:reduce){.yrs a::before{transition:none}}
 
 #photos+.yrs,.yrs{margin-top:0}
 #photos:has(+.yrs){padding-bottom:18px}
+
+/* Photos: era switcher (1977–1986 / 2006–2013) */
+.eras{display:flex;flex-wrap:wrap;gap:10px;margin:14px 0 6px}
+.eras a{font:500 13px var(--mono);letter-spacing:.14em;padding:9px 18px;border:1px solid var(--line);border-radius:999px;color:var(--muted);text-decoration:none;transition:color .2s,border-color .2s,background .2s}
+.eras a:hover{color:var(--ink);border-color:var(--muted)}
+.eras a[aria-current=page]{background:var(--ice);border-color:var(--ice);color:#000}
+.eras a:focus-visible{outline:2px solid var(--ice);outline-offset:3px}
+.erasend{padding:34px 0 46px;border-top:1px solid var(--line)}

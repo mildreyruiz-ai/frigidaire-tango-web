@@ -6,3 +6,5 @@
   Cache-Control: public, max-age=0, must-revalidate
 /
   Cache-Control: public, max-age=0, must-revalidate
+/assets/photos/*
+  Cache-Control: public, max-age=2592000
