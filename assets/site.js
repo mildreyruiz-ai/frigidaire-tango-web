@@ -271,3 +271,92 @@ location.href='mailto:Frigidaire%20Tango%20%3Cchichoi60@gmail.com%3E?subject='+e
   set(); window.addEventListener('resize', set);
   if ('ResizeObserver' in window) new ResizeObserver(set).observe(bar);
 })();
+
+/* Favourite song box: autocomplete over the discography, then POST to the Pages Function /api/favorite */
+(function () {
+  var f = document.getElementById('fav'); if (!f) return;
+  var SONGS = [["Dangerous Echo","The Cock","25126861","S8Bk-LK-6Qk"],["Any Time You Dress So Fine","The Cock","25126871","V1-dxwwVgAk"],["I'm Faster","The Cock","25126911","ajzCVhk91u8"],["Tell Me Sometimes","The Cock","25126941",""],["Nothing More","The Cock","25126931",""],["A Citizen Came","The Cock","25126901",""],["Presage","Music for Us","25126761","RzL8UkzRTLM"],["Cold Furs","Music for Us","25126771","yUmKSR8J7nU"],["Shout Yourself To Death","Music for Us","25126781","tYJUg1qfvoE"],["Insecurity","Music for Us","25126791",""],["Dazed Life","Music for Us","25126801",""],["When Your Head Drop","Music for Us","25126811",""],["Take Over From Me","Music for Us","25126821","hr69hFQOIGw"],["Recall","Music for Us","25126831","BJINdGqRfRE"],["Healthy","Music for Us","25126851","arwjAwL17BY"],["I creatori","Modern Vintage Wave","3946265371","9886Mz-s808"],["Non sei raggiungibile","Modern Vintage Wave","3946265381",""],["Timeless Future","Modern Vintage Wave","3946265391",""],["Life Is A Little Trip","Modern Vintage Wave","3946265401",""],["Deadline Body","Modern Vintage Wave","3946265411",""],["Bloody Glory","Modern Vintage Wave","3946265431",""],["Adrian","Modern Vintage Wave","3946265441",""],["L'ombra della tua grazia","Modern Vintage Wave","3946265451",""],["Considerations","Modern Vintage Wave","3946265461",""],["Milioni di parole","L'illusione del volo","25126991","bFy_oYi2SFw"],["Normalmente triste","L'illusione del volo","25127001","CqkTkIZuQsQ"],["Mescola le razze","L'illusione del volo","25127011","cu_x_4J5XkY"],["L'acqua pensa","L'illusione del volo","25127021","6KIM3R1lqjM"],["Natural mente","L'illusione del volo","25127031","IjIoGTZuXRw"],["Soffia","L'illusione del volo","25127041","-L0uZfR7siw"],["Distogli lo sguardo","L'illusione del volo","25127051",""],["Le cose capite","L'illusione del volo","25127061","dEP31l6_gXw"],["Poesia di luce","L'illusione del volo","25127071",""],["Paura del tempo","L'illusione del volo","25127081",""],["Preghiera","L'illusione del volo","25127091",""],["Tutto niente qualcosa","L'illusione del volo","25127101","4PiPXtJ96Mk"],["Dreamcity","L'illusione del volo","25127111","CCxmSJwt2Gw"],["New Wave Anthem","L'illusione del volo","25127121","x8QbwDW8mGI"],["Eyes in the Mirror","Body Section","",""],["Wonderful Woman","Body Section","",""],["A Gift of Tears","Body Section","",""],["Vanity Fair","Body Section","25126841","r7VQRKmHGD0"],["Dreamtime Comes","Body Section","",""],["Transea","Body Section","",""],["Specchi d'acqua","Body Section","",""],["Fear","Body Section","",""],["Dopo Heidegger","Body Section","",""],["Danke Mamy","Body Section","",""],["Fears","Fears","3946265421","ZLTuK3KW5c0"],["Oversouls","Oversouls","","2balou-vUk0"],["Russian Dolls","Oversouls","",""],["Don't Kill Time","The Freezer Box","25126971","XoRqG0slHZM"],["This Days '78","The Freezer Box","25126981",""],["Roxy","Live in Barcelona 1985","",""],["Psycho Killer","P.E.A.C.E.","",""],["Tempo reale","P.E.A.C.E.","",""],["Haiku","P.E.A.C.E.","",""],["Ancora qui","P.E.A.C.E.","",""],["The Romantic Life-Guard","P.E.A.C.E.","",""],["Voghera","P.E.A.C.E.","",""],["Mother of Nothing","P.E.A.C.E.","",""],["Fast Food","P.E.A.C.E.","",""],["Corpo di una donna","P.E.A.C.E.","",""],["Canzone Dada","P.E.A.C.E.","",""],["Secrets of Joy","P.E.A.C.E.","",""],["Richiamo","Artisti vari risuonano i Frigidaire Tango","",""],["Push","Artisti vari risuonano i Frigidaire Tango","25126891",""],["Brain Rock","Artisti vari risuonano i Frigidaire Tango","25126951",""],["The Tiger","Artisti vari risuonano i Frigidaire Tango","",""],["Frigidaire Tango","Artisti vari risuonano i Frigidaire Tango","25126961","uba2Z8BZFkk"],["The Cock miniaturizzato","Artisti vari risuonano i Frigidaire Tango","",""],["East","Rockgarage Compilation Vol. 2","",""],["I Am an Open Sea","Rockgarage Compilation Vol. 2","",""],["Grigia miseria","Rockgarage Compilation Vol. 4","",""],["I programmi agli inferi","Rockgarage Compilation Vol. 4","",""],["Altrove","Rockgarage Compilation Vol. 4","",""],["Windy Nights for the Heroes","Rockgarage Compilation Vol. 4","",""],["Panorama","Rockgarage Compilation Vol. 4","",""],["La rhumba de Shanghai","Rockgarage Compilation Vol. 4","",""],["Mouth of Nilo","Rockgarage Compilation Vol. 4","",""],["Killing Japanese","Rockgarage Compilation Vol. 4","",""],["Oggi è un bel giorno","Rockgarage Compilation Vol. 4","",""],["A New Direction","The Cock","137529689",""],["Be Only","The Cock","137529691",""],["Blue & Pink","The Cock","25126881",""],["A Good Cure","The Cock","137529697",""],["Black Curtains","The Cock","25126921","pvpPKg5DpVI"],["The Modern","The Cock","137529701",""]];
+  var en = document.documentElement.lang === 'en', msg = f.querySelector('.favmsg'), btn = f.querySelector('button'), inp = f.elements.song;
+  var T = en ? { ok: 'Thank you! Your vote is saved.', listen: 'Listen to', yt: 'on YouTube', dz: 'Listen on Deezer', short: 'Start typing and pick a song from the list.', none: 'No match. Check the spelling and pick a song from the list.', slow: 'One moment, then try again.', err: 'Sorry, we could not save it right now. Please try again later.' }
+             : { ok: 'Grazie! Il tuo voto è stato salvato.', listen: 'Ascolta', yt: 'su YouTube', dz: 'Ascolta su Deezer', short: 'Inizia a scrivere e scegli un brano dalla lista.', none: 'Nessun risultato. Controlla come hai scritto e scegli un brano dalla lista.', slow: 'Un attimo, poi riprova.', err: 'Spiacenti, al momento non è stato possibile salvarlo. Riprova più tardi.' };
+  function norm(s) { return s.normalize('NFD').replace(/[̀-ͯ]/g, '').toLowerCase().replace(/[^a-z0-9 ]+/g, ' ').replace(/\s+/g, ' ').trim(); }
+  SONGS.forEach(function (s) { s.push(norm(s[0])); });
+  var ctaBox = document.createElement('div'); ctaBox.className = 'favcta'; ctaBox.hidden = true; msg.parentNode.insertBefore(ctaBox, msg.nextSibling);
+  function cta(s) {
+    ctaBox.textContent = ''; var t = document.createElement('b'); t.setAttribute('translate', 'no'); t.textContent = s[0]; ctaBox.appendChild(t);
+    var row = document.createElement('div'); row.className = 'act';
+    if (s[2]) { var b = document.createElement('button'); b.type = 'button'; b.className = 'play'; b.setAttribute('data-dz', s[2]); b.setAttribute('data-t', s[0]); b.textContent = '\u25B6 ' + T.listen; row.appendChild(b); }
+    else { var a = document.createElement('a'); a.className = 'play'; a.target = '_blank'; a.rel = 'noopener'; a.href = 'https://www.deezer.com/search/' + encodeURIComponent('Frigidaire Tango ' + s[0]); a.textContent = '\u25B6 ' + T.dz; row.appendChild(a); }
+    if (s[3]) { var y = document.createElement('a'); y.className = 'yl'; y.target = '_blank'; y.rel = 'noopener'; y.href = 'https://www.youtube.com/watch?v=' + s[3]; y.textContent = T.yt; row.appendChild(y); }
+    ctaBox.appendChild(row); ctaBox.hidden = false;
+  }
+  function say(t, bad) { if (t !== T.ok) ctaBox.hidden = true; msg.textContent = t; msg.classList.toggle('err', !!bad); }
+  var old = f.querySelector('datalist'); if (old) old.remove(); inp.removeAttribute('list');
+  var box = document.createElement('ul'); box.className = 'favlist'; box.id = 'fav-list'; box.setAttribute('role', 'listbox'); box.hidden = true;
+  inp.parentNode.style.position = 'relative'; inp.parentNode.appendChild(box);
+  inp.setAttribute('role', 'combobox'); inp.setAttribute('aria-expanded', 'false'); inp.setAttribute('aria-controls', 'fav-list'); inp.setAttribute('aria-autocomplete', 'list');
+  var chosen = null, items = [], cur = -1;
+  function match(q) {
+    var k = norm(q); if (!k) return [];
+    var a = [], b = [], c = [];
+    SONGS.forEach(function (s) {
+      var n = s[4];
+      if (n.indexOf(k) === 0) a.push(s);
+      else if (n.split(' ').some(function (w) { return w.indexOf(k) === 0; }) || (' ' + n).indexOf(' ' + k) >= 0) b.push(s);
+      else if (n.indexOf(k) > 0) c.push(s);
+    });
+    return a.concat(b, c).slice(0, 6);
+  }
+  function hide() { box.hidden = true; inp.setAttribute('aria-expanded', 'false'); cur = -1; }
+  function pick(s) { inp.value = s[0]; chosen = s; hide(); say(''); }
+  function hi() { Array.prototype.forEach.call(box.children, function (li, i) { li.classList.toggle('on', i === cur); li.setAttribute('aria-selected', i === cur); }); }
+  function render() {
+    items = match(inp.value); box.textContent = '';
+    if (!items.length) { hide(); return; }
+    items.forEach(function (s, i) {
+      var li = document.createElement('li'); li.setAttribute('role', 'option'); li.setAttribute('translate', 'no');
+      var b = document.createElement('b'); b.textContent = s[0]; var sm = document.createElement('small'); sm.textContent = s[1];
+      li.appendChild(b); li.appendChild(sm);
+      li.addEventListener('mousedown', function (e) { e.preventDefault(); pick(s); });
+      box.appendChild(li);
+    });
+    box.hidden = false; inp.setAttribute('aria-expanded', 'true'); cur = -1;
+  }
+  inp.addEventListener('input', function () { chosen = null; say(''); render(); });
+  inp.addEventListener('focus', function () { if (inp.value) render(); });
+  inp.addEventListener('blur', function () { setTimeout(hide, 120); });
+  inp.addEventListener('keydown', function (e) {
+    if (box.hidden) return;
+    if (e.key === 'ArrowDown') { e.preventDefault(); cur = (cur + 1) % items.length; hi(); }
+    else if (e.key === 'ArrowUp') { e.preventDefault(); cur = (cur - 1 + items.length) % items.length; hi(); }
+    else if (e.key === 'Enter' && cur >= 0) { e.preventDefault(); pick(items[cur]); }
+    else if (e.key === 'Escape') hide();
+  });
+  f.addEventListener('submit', function (e) {
+    e.preventDefault();
+    var v = (inp.value || '').trim();
+    if (v.length < 2) { say(T.short, true); inp.focus(); return; }
+    if (!chosen) { var k = norm(v); chosen = SONGS.filter(function (s) { return s[4] === k; })[0] || null; }
+    if (!chosen) { var m = match(v); if (m.length === 1) chosen = m[0]; }
+    if (!chosen) { say(T.none, true); render(); inp.focus(); return; }
+    inp.value = chosen[0]; hide();
+    btn.disabled = true;
+    fetch('/api/favorite', { method: 'POST', headers: { 'content-type': 'application/json' }, body: JSON.stringify({ song: chosen[0], hp: f.elements.hp.value, lang: en ? 'en' : 'it' }) })
+      .then(function (r) { return r.json().catch(function () { return {}; }).then(function (d) { return { s: r.status, d: d }; }); })
+      .then(function (x) { if (x.d && x.d.ok) { say(T.ok); cta(chosen); inp.value = ''; chosen = null; } else say(x.s === 429 ? T.slow : T.err, true); })
+      .catch(function () { say(T.err, true); })
+      .then(function () { btn.disabled = false; });
+  });
+})();
+
+
+/* Listen buttons: load the Deezer player only on click */
+document.addEventListener('click', function (e) {
+  var b = e.target.closest && e.target.closest('button.play[data-dz]'); if (!b) return;
+  var host = b.closest('li') || b.closest('.favcta'), old = host.querySelector(':scope > .pl');
+  if (old) { old.remove(); b.classList.remove('on'); return; }
+  var d = document.createElement('div'); d.className = 'pl';
+  var i = document.createElement('iframe'); i.src = 'https://widget.deezer.com/widget/dark/track/' + b.getAttribute('data-dz');
+  i.title = b.getAttribute('data-t') + ' \u2014 Deezer'; i.width = '100%'; i.height = '92'; i.setAttribute('allow', 'encrypted-media; clipboard-write'); i.setAttribute('loading', 'lazy'); i.style.border = '0';
+  d.appendChild(i); host.appendChild(d); b.classList.add('on');
+});

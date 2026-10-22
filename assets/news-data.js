@@ -3,6 +3,16 @@
    For the Italian version add title_it, text_it, kind_it. Order does not matter. */
 window.FT_NEWS=[
   {
+    "date": "2026-10-22",
+    "kind": "Chart",
+    "title": "The most played Frigidaire Tango tracks of all time",
+    "text": "Spotify and Deezer data combined into a top 7: Recall leads the chart. Tell us which is your favourite track.",
+    "url": "#piu-ascoltati",
+    "kind_it": "Classifica",
+    "title_it": "I brani più ascoltati dei Frigidaire Tango di tutti i tempi",
+    "text_it": "I dati di Spotify e Deezer uniti in una top 7: Recall è in testa. Dicci qual è il tuo brano preferito."
+  },
+  {
     "date": "2026-10-31",
     "kind": "Concert",
     "title": "The Fleshtones at the Capitol in Pordenone, with The Vindicators opening",
