@@ -533,3 +533,10 @@ dialog.lb .lb-x{top:12px;right:14px}.lb-p{left:12px;top:50%}.lb-n{right:12px;top
 .top7q{margin:40px 0 0;padding:26px 26px;border:0;border-left:8px solid #fff;background:var(--red);color:#fff;font:400 clamp(30px,4.6vw,56px)/1.05 var(--display);text-transform:uppercase;letter-spacing:.015em}
 #top7 .btns{margin-top:0!important;padding:16px 26px;background:#14090a;border:1px solid var(--red);border-top:0}
 @media(max-width:560px){.top7q{padding:20px 18px}#top7 .btns{padding:14px 18px}}
+.vnav{display:flex;gap:10px;flex-wrap:wrap;margin:0 0 26px}
+.vnav a{font:500 12px var(--mono);letter-spacing:.12em;text-transform:uppercase;color:var(--ink);border:1px solid var(--line);padding:9px 16px;text-decoration:none}
+.vnav a:hover,.vnav a:focus-visible{border-color:var(--ice);color:var(--ice)}
+.vsec{margin-top:64px;scroll-margin-top:calc(var(--barh,64px) + 16px)}
+.vsec h2{font:400 clamp(36px,5vw,56px)/1 var(--display);letter-spacing:.02em;margin:0 0 8px;color:var(--ink)}
+.vsec .sub{margin:0 0 22px}
+.vpl{margin-top:18px}

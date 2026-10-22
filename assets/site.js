@@ -34,7 +34,7 @@ document.querySelectorAll('.yt').forEach(function (b) {
   var link = document.createElement('a');
   link.href = watch; link.target = '_blank'; link.rel = 'noopener';
   link.className = 'ytlink'; link.textContent = document.documentElement.lang === 'it' ? 'Guarda su YouTube ↗' : 'Watch on YouTube ↗';
-  b.parentNode.appendChild(link);
+  if (!b.parentNode.querySelector('.ytlink')) b.parentNode.appendChild(link);
   b.addEventListener('click', function () {
     if (isLocal) { window.open(watch, '_blank', 'noopener'); return; }
     var f = document.createElement('iframe');
