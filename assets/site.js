@@ -447,3 +447,27 @@ document.addEventListener('click', function (e) {
     upd(); setTimeout(upd, 400);
   });
 })();
+
+/* Videos page: keep the category nav under the header and highlight the current section */
+(function () {
+  var nav = document.querySelector('.vnav'), bar = document.querySelector('.bar');
+  if (!nav) return;
+  var links = [].slice.call(nav.querySelectorAll('a')), secs = links.map(function (a) { return document.querySelector(a.getAttribute('href')); }), raf = 0;
+  function dims() {
+    if (bar) document.documentElement.style.setProperty('--barh', bar.offsetHeight + 'px');
+    document.documentElement.style.setProperty('--vnavh', nav.offsetHeight + 'px');
+  }
+  function mark() {
+    raf = 0;
+    var line = (bar ? bar.offsetHeight : 0) + nav.offsetHeight + 40, cur = -1;
+    secs.forEach(function (s, i) { if (s && s.getBoundingClientRect().top <= line) cur = i; });
+    links.forEach(function (a, i) {
+      if (i === cur) { a.setAttribute('aria-current', 'true'); var l = a.offsetLeft - 16; if (nav.scrollWidth > nav.clientWidth) nav.scrollTo({ left: l, behavior: 'smooth' }); }
+      else a.removeAttribute('aria-current');
+    });
+  }
+  function req() { if (!raf) raf = requestAnimationFrame(mark); }
+  window.addEventListener('scroll', req, { passive: true });
+  window.addEventListener('resize', function () { dims(); req(); });
+  dims(); mark();
+})();
