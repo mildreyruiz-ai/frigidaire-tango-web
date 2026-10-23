@@ -420,3 +420,30 @@ document.addEventListener('click', function (e) {
     tt.addEventListener('click', function () { toggle(li, id, title); });
   });
 })();
+
+/* Photo strips: arrows on each side (scrolling and swiping still work) */
+(function () {
+  var rolls = document.querySelectorAll('.roll');
+  if (!rolls.length) return;
+  var it = document.documentElement.lang === 'it';
+  Array.prototype.forEach.call(rolls, function (r) {
+    var w = document.createElement('div'); w.className = 'rollwrap';
+    r.parentNode.insertBefore(w, r); w.appendChild(r);
+    function mk(dir) {
+      var b = document.createElement('button'); b.type = 'button'; b.className = 'rarr ' + (dir < 0 ? 'rl' : 'rr');
+      b.textContent = dir < 0 ? '‹' : '›';
+      b.setAttribute('aria-label', dir < 0 ? (it ? 'Foto precedenti' : 'Previous photos') : (it ? 'Foto successive' : 'Next photos'));
+      b.addEventListener('click', function () { r.scrollBy({ left: dir * Math.max(240, r.clientWidth * 0.8), behavior: 'smooth' }); });
+      w.appendChild(b); return b;
+    }
+    var L = mk(-1), R = mk(1);
+    function upd() {
+      var max = r.scrollWidth - r.clientWidth;
+      L.hidden = r.scrollLeft < 8; R.hidden = max < 8 || r.scrollLeft > max - 8;
+    }
+    r.addEventListener('scroll', upd, { passive: true });
+    window.addEventListener('resize', upd);
+    r.addEventListener('load', upd, true);
+    upd(); setTimeout(upd, 400);
+  });
+})();

@@ -567,3 +567,12 @@ dialog.lb.single .lb-p,dialog.lb.single .lb-n,dialog.lb.single .lb-k{display:non
 .tl2 li > .pl{grid-column:1/-1;margin-top:6px}
 .tl2 li > .pl iframe{display:block;border-radius:8px}
 @media(max-width:760px){.tl2 li{grid-template-columns:30px minmax(0,1fr) auto}}
+
+/* photo strips: side arrows */
+.rollwrap{position:relative}
+.rarr{position:absolute;top:calc(50% - 8px);transform:translateY(-50%);z-index:3;width:44px;height:44px;border-radius:50%;border:1px solid #4a4540;background:rgba(10,9,8,.78);color:#eee;font:300 30px/1 var(--body);cursor:pointer;display:grid;place-items:center;padding:0 0 3px;transition:border-color .15s,background .15s}
+.rarr[hidden]{display:none}
+.rarr:hover,.rarr:focus-visible{border-color:var(--ice);background:rgba(10,9,8,.95);outline:none}
+.rarr:focus-visible{outline:2px solid var(--ice);outline-offset:2px}
+.rl{left:8px}.rr{right:8px}
+@media(max-width:700px){.rarr{width:38px;height:38px;font-size:26px}.rl{left:4px}.rr{right:4px}}
