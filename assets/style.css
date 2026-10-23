@@ -584,3 +584,9 @@ dialog.lb.single .lb-p,dialog.lb.single .lb-n,dialog.lb.single .lb-k{display:non
 .vnav a[aria-current=true]{border-color:var(--red);color:var(--red)}
 .vsec{scroll-margin-top:calc(var(--barh,64px) + var(--vnavh,56px) + 12px)}
 @media(max-width:700px){.vnav{gap:8px}.vnav a{padding:8px 12px}}
+.h2b{scroll-margin-top:calc(var(--barh,64px) + var(--vnavh,56px) + 12px)}
+/* Top-7 progress bars must not inherit the sticky header rules (.bar) */
+.top7 .bar{position:static;top:auto;z-index:auto;backdrop-filter:none;border-bottom:0}
+/* opaque header + category nav so content never shows through while scrolling */
+header.bar,.bar:not(.top7 .bar){background:#000}
+.vnav,.yrs{background:#000}
