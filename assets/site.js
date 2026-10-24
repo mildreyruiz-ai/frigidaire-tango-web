@@ -395,6 +395,7 @@ document.addEventListener('click', function (e) {
     var b = li.querySelector('.tplay'); if (b) { b.setAttribute('aria-pressed', 'false'); b.textContent = '▶'; }
   }
   function toggle(li, id, title) {
+    if (window.ftStopAudio) window.ftStopAudio();
     var open = li.classList.contains('playing');
     Array.prototype.forEach.call(document.querySelectorAll('.tl2 li.playing'), close);
     if (open) return;
@@ -470,4 +471,68 @@ document.addEventListener('click', function (e) {
   window.addEventListener('scroll', req, { passive: true });
   window.addEventListener('resize', function () { dims(); req(); });
   dims(); mark();
+})();
+
+/* Discography: tracks with their own audio file (not on Deezer/Spotify) -> built-in player, plays the album in order */
+(function () {
+  var rows = document.querySelectorAll('.tl2 li[data-audio]');
+  if (!rows.length) return;
+  var it = document.documentElement.lang === 'it';
+  var audio = new Audio(); audio.preload = 'none';
+  var cur = null;
+  function fmt(t) { if (!isFinite(t)) return '0:00'; t = Math.floor(t); return Math.floor(t / 60) + ':' + ('0' + (t % 60)).slice(-2); }
+  function btnState(li, on) {
+    var b = li.querySelector('.tplay'); if (!b) return;
+    b.textContent = on ? '❚❚' : '▶'; b.setAttribute('aria-pressed', on ? 'true' : 'false');
+  }
+  function stopDeezer() {
+    Array.prototype.forEach.call(document.querySelectorAll('.tl2 li.playing:not([data-audio])'), function (l) {
+      var p = l.querySelector(':scope > .pl'); if (p) p.remove(); l.classList.remove('playing'); btnState(l, false);
+    });
+  }
+  function closeRow(li) {
+    var p = li.querySelector(':scope > .pl'); if (p) p.remove();
+    li.classList.remove('playing'); btnState(li, false);
+  }
+  window.ftStopAudio = function () { audio.pause(); if (cur) { closeRow(cur); cur = null; } };
+  function build(li, title) {
+    var d = document.createElement('div'); d.className = 'pl ap';
+    d.innerHTML = '<button type="button" class="apb" aria-label="Pause">❚❚</button><span class="apt">0:00</span>' +
+      '<input class="aps" type="range" min="0" max="1000" value="0" step="1" aria-label="' + (it ? 'Posizione' : 'Seek') + '"><span class="apd">0:00</span>';
+    d.querySelector('.apb').addEventListener('click', function () { if (audio.paused) audio.play(); else audio.pause(); });
+    var r = d.querySelector('.aps');
+    r.addEventListener('input', function () { if (audio.duration) audio.currentTime = audio.duration * r.value / 1000; });
+    li.appendChild(d); return d;
+  }
+  function play(li) {
+    var title = li.querySelector('.tt').textContent.trim();
+    if (cur === li) { if (audio.paused) audio.play(); else audio.pause(); return; }
+    stopDeezer(); if (cur) closeRow(cur);
+    cur = li; li.classList.add('playing'); btnState(li, true); build(li, title);
+    audio.src = li.getAttribute('data-audio'); audio.play().catch(function () {});
+  }
+  function ui() {
+    if (!cur) return; var d = cur.querySelector('.ap'); if (!d) return;
+    d.querySelector('.apt').textContent = fmt(audio.currentTime); d.querySelector('.apd').textContent = fmt(audio.duration);
+    var r = d.querySelector('.aps'); if (audio.duration && document.activeElement !== r) r.value = Math.round(audio.currentTime / audio.duration * 1000);
+    d.querySelector('.apb').textContent = audio.paused ? '▶' : '❚❚';
+    d.querySelector('.apb').setAttribute('aria-label', audio.paused ? (it ? 'Riproduci' : 'Play') : 'Pause');
+    btnState(cur, !audio.paused);
+  }
+  ['timeupdate', 'loadedmetadata', 'play', 'pause'].forEach(function (e) { audio.addEventListener(e, ui); });
+  audio.addEventListener('ended', function () {
+    var all = Array.prototype.slice.call(rows), i = all.indexOf(cur), nx = all[i + 1];
+    if (nx) play(nx); else { closeRow(cur); cur = null; }
+  });
+  Array.prototype.forEach.call(rows, function (li) {
+    if (li.querySelector('a.dz')) return;
+    var tt = li.querySelector('.tt'); if (!tt) return;
+    var title = tt.textContent.trim();
+    var b = document.createElement('button'); b.type = 'button'; b.className = 'tplay'; b.textContent = '▶'; b.setAttribute('aria-pressed', 'false');
+    b.setAttribute('aria-label', (it ? 'Ascolta ' : 'Play ') + title);
+    var n = li.querySelector('.n'); if (n) { n.textContent = ''; n.appendChild(b); }
+    li.classList.add('canplay');
+    b.addEventListener('click', function () { play(li); });
+    tt.addEventListener('click', function () { play(li); });
+  });
 })();

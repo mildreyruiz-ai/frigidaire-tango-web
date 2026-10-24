@@ -590,3 +590,11 @@ dialog.lb.single .lb-p,dialog.lb.single .lb-n,dialog.lb.single .lb-k{display:non
 /* opaque header + category nav so content never shows through while scrolling */
 header.bar,.bar:not(.top7 .bar){background:#000}
 .vnav,.yrs{background:#000}
+
+/* built-in audio player */
+.tl2 .pl.ap{display:flex;align-items:center;gap:12px;padding:10px 12px;border:1px solid var(--line);background:#0d0c0b;border-radius:8px;font:500 12px var(--mono);color:var(--muted)}
+.tl2 .apb{all:unset;box-sizing:border-box;cursor:pointer;width:34px;height:34px;flex:0 0 auto;border-radius:50%;background:var(--red);color:#fff;display:grid;place-items:center;font:500 11px/1 var(--mono)}
+.tl2 .apb:focus-visible{outline:2px solid var(--ice);outline-offset:2px}
+.tl2 .apt,.tl2 .apd{font-variant-numeric:tabular-nums;min-width:34px}
+.tl2 .apd{text-align:right}
+.tl2 .aps{flex:1;min-width:0;accent-color:var(--red);height:20px;cursor:pointer}
