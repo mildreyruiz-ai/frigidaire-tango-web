@@ -304,7 +304,7 @@ h1.ph{font:400 clamp(38px,6vw,58px)/1 var(--display);margin:0 0 8px;letter-spaci
 .lang a:focus-visible{outline:2px solid var(--ice);outline-offset:2px}
 
 .heroband{display:flex;gap:10px;margin:30px 0 10px;flex-wrap:nowrap}
-.heroband img{width:clamp(64px,9vw,104px);height:auto;aspect-ratio:1/1;object-fit:cover;border:1px solid rgba(255,255,255,.18)}
+.heroband img{width:clamp(56px,9vw,104px);height:auto;aspect-ratio:1/1;object-fit:cover;border:1px solid rgba(255,255,255,.18)}
 
 .hero > img{object-position:center top;box-sizing:border-box;padding-top:clamp(28px,4.5vw,64px);filter:brightness(.38) contrast(1.1)}
 @media(min-width:701px){.hero > img{height:clamp(640px,52vw,780px)}.hero .copy{padding-block:32px 8px}}
