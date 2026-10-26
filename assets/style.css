@@ -598,3 +598,27 @@ header.bar,.bar:not(.top7 .bar){background:#000}
 .tl2 .apt,.tl2 .apd{font-variant-numeric:tabular-nums;min-width:34px}
 .tl2 .apd{text-align:right}
 .tl2 .aps{flex:1;min-width:0;accent-color:var(--red);height:20px;cursor:pointer}
+
+/* MVW press block (news) + press page groups */
+.recap blockquote cite{display:block;margin-top:8px;font:500 12px var(--mono);font-style:normal;letter-spacing:.08em;text-transform:uppercase}
+.recap blockquote cite a{color:var(--ice);text-decoration:none}
+.recap .mvwrev{margin:32px 0}
+.recap .mvwrev li{padding:14px 0}
+.recap .mvwrev a,.recap .mvwrev .nolink{font-weight:500;font-size:16px;line-height:1.45;display:block;margin-top:4px;color:var(--ink)}
+.recap .mvwrev .nolink{color:var(--ink)}
+.recap .mvwrev a:hover{color:var(--ice)}
+.recap .mag{display:grid;grid-template-columns:minmax(0,300px) minmax(0,1fr);gap:32px;align-items:start;margin:40px 0}
+.recap .mag figure img{width:100%;height:auto}
+.recap .mag h4,.recap .hl{font:400 clamp(24px,3vw,32px)/1.1 var(--display);margin:0 0 12px;letter-spacing:.02em}
+.recap .hl{margin-top:36px}
+.recap .more{margin-top:24px;color:var(--muted)}
+@media(max-width:760px){.recap .mag{grid-template-columns:1fr}.recap .mag figure{max-width:300px}}
+.pgroups{margin-top:56px;border-top:1px solid var(--line);padding-top:32px}
+.pgroups .sub2{color:var(--muted);max-width:760px;margin:0 0 8px}
+.pgroups h3{font:400 clamp(24px,3vw,32px)/1.1 var(--display);margin:32px 0 10px;letter-spacing:.02em}
+.pgroups .links{list-style:none;margin:0;padding:0;columns:3 220px;column-gap:32px}
+.pgroups .links li{break-inside:avoid;padding:6px 0;border-top:1px solid var(--line)}
+.pgroups .links a{color:var(--ink);text-decoration:none;font-weight:500}
+.pgroups .links a:hover{color:var(--ice)}
+.pgroups .air{margin:0 0 6px;line-height:1.7}
+.pgroups .air2{margin:0;color:var(--muted);font-size:14px}

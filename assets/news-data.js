@@ -65,6 +65,36 @@ window.FT_NEWS=[
     "text_it": "Include l'omaggio ad Adrian Borland dei The Sound."
   },
   {
+    "date": "2026-06",
+    "kind": "Press",
+    "title": "Frigidaire Tango on the cover of Traks Magazine",
+    "text": "Issue 64 (June 2026) features a cover story and long interview about Modern Vintage Wave.",
+    "url": "#mvw-stampa",
+    "kind_it": "Stampa",
+    "title_it": "I Frigidaire Tango in copertina su Traks Magazine",
+    "text_it": "Il numero 64 (giugno 2026) dedica ai Frigidaire Tango la copertina e una lunga intervista su Modern Vintage Wave."
+  },
+  {
+    "date": "2026-04-24",
+    "kind": "Release",
+    "title": "Modern Vintage Wave is out",
+    "text": "The new album is released on Psicolabel, followed by reviews in Repubblica, Rockerilla, Blowup, Rumore and more.",
+    "url": "#mvw-stampa",
+    "kind_it": "Uscita",
+    "title_it": "Esce Modern Vintage Wave",
+    "text_it": "Il nuovo album esce per Psicolabel, seguito da recensioni su Repubblica, Rockerilla, Blowup, Rumore e altri."
+  },
+  {
+    "date": "2026-04",
+    "kind": "Press",
+    "title": "Rolling Stone Italia: albums of the month",
+    "text": "Modern Vintage Wave is among the records recommended by Rolling Stone for April 2026.",
+    "url": "https://www.rollingstone.it/musica/classifiche-liste-musica/i-dischi-da-ascoltare-ad-aprile-2026/1024850/",
+    "kind_it": "Stampa",
+    "title_it": "Rolling Stone Italia: i dischi del mese",
+    "text_it": "Modern Vintage Wave tra i dischi consigliati da Rolling Stone per aprile 2026."
+  },
+  {
     "date": "2026-05-04",
     "kind": "Press",
     "title": "Fardrock reviews Modern Vintage Wave",
