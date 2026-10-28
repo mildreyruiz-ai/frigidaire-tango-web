@@ -602,8 +602,73 @@ document.addEventListener('click', function (e) {
   });
 })();
 
+/* Newsletter splash: full-screen first screen on the home page (hero photo + subscribe form); closing or subscribing reveals the index */
+(function () {
+  var p = location.pathname.replace(/index\.html$/, '');
+  var home = p === '/' || p === '/en/' || p === '/en';
+  if (!home) return;
+  function ck(n) { var m = document.cookie.match(new RegExp('(?:^|; )' + n + '=([^;]*)')); return m ? m[1] : ''; }
+  function setck(n, v, days) { document.cookie = n + '=' + v + '; Path=/; Max-Age=' + days * 86400 + '; SameSite=Lax' + (location.protocol === 'https:' ? '; Secure' : ''); }
+  var forced = /[?&]club=1/.test(location.search);
+  if ((ck('ft_member') === '1' || ck('ft_nl') === 'x') && !forced) return;
+  var en = (document.documentElement.lang || 'it').slice(0, 2) === 'en';
+  var T = en ? {
+    k: 'NEWSLETTER', h: 'Stay in the loop', c: 'Subscribe to the newsletter for news about the band (new content, records and concerts) and get our Christmas gift: exclusive access to unreleased material from the group, reserved for subscribers only. We only write when there is something substantial, with no fixed schedule.',
+    e: 'Your email', a: 'I agree to receive the newsletter. See the', p: 'privacy policy', b: 'Subscribe', x: 'Close', skip: 'Continue to the site', ok: 'Done! Thank you for subscribing.', bad: 'Please enter a valid email and tick the box.', err: 'Something went wrong. Please try again later.', pu: '/en/privacy'
+  } : {
+    k: 'NEWSLETTER', h: 'Resta aggiornato', c: 'Iscriviti alla newsletter per ricevere le novità sulla band (nuovi contenuti, dischi e concerti) e ricevere il nostro regalo di Natale: accesso esclusivo a contenuti inediti del gruppo, riservati solo agli iscritti. Scriviamo solo quando c’è qualcosa di sostanziale, senza una frequenza fissa.',
+    e: 'La tua email', a: 'Accetto di ricevere la newsletter. Leggi l’', p: 'informativa sulla privacy', b: 'Iscriviti', x: 'Chiudi', skip: 'Continua sul sito', ok: 'Fatto! Grazie per l’iscrizione.', bad: 'Inserisci un’email valida e spunta la casella.', err: 'Qualcosa non ha funzionato. Riprova più tardi.', pu: '/privacy'
+  };
+  var hero = document.querySelector('.hero > img');
+  var thumbs = [].slice.call(document.querySelectorAll('.heroband img')).map(function (i) { return '<img src="' + i.getAttribute('src') + '" alt="" width="320" height="320">'; }).join('');
+  var box = document.createElement('div');
+  box.className = 'ftsp'; box.setAttribute('role', 'dialog'); box.setAttribute('aria-modal', 'true'); box.setAttribute('aria-labelledby', 'ftsp-t');
+  box.innerHTML = (hero ? '<img class="ftsp-bg" src="' + hero.getAttribute('src') + '" alt="">' : '') +
+    '<button type="button" class="ftsp-x" aria-label="' + T.x + '">&times;</button>' +
+    '<div class="ftsp-in"><p class="ftn-k" translate="no">' + T.k + '</p><p class="ftsp-brand" translate="no">Frigidaire Tango</p>' +
+    '<div class="ftsp-th" aria-hidden="true">' + thumbs + '</div>' +
+    '<h2 id="ftsp-t">' + T.h + '</h2><p class="ftsp-c">' + T.c + '</p>' +
+    '<form novalidate><input type="email" name="email" autocomplete="email" inputmode="email" placeholder="' + T.e + '" aria-label="' + T.e + '" required>' +
+    '<input type="text" name="hp" tabindex="-1" autocomplete="off" aria-hidden="true" class="ftn-hp">' +
+    '<label class="ftn-a"><input type="checkbox" name="consent"> <span>' + T.a + ' <a href="' + T.pu + '">' + T.p + '</a>.</span></label>' +
+    '<button type="submit" class="ftn-b">' + T.b + '</button></form><p class="ftn-m" role="status" aria-live="polite"></p>' +
+    '<button type="button" class="ftsp-skip">' + T.skip + ' →</button></div>';
+  document.body.appendChild(box);
+  document.documentElement.classList.add('ftsp-open');
+  var kids = [].slice.call(document.body.children).filter(function (n) { return n !== box && n.tagName !== 'SCRIPT'; });
+  kids.forEach(function (n) { n.inert = true; });
+  var msg = box.querySelector('.ftn-m'), form = box.querySelector('form');
+  function hide(remember) {
+    if (remember) setck('ft_nl', 'x', 30);
+    box.classList.add('off'); document.documentElement.classList.remove('ftsp-open');
+    kids.forEach(function (n) { n.inert = false; });
+    setTimeout(function () { box.remove(); }, 400);
+    document.removeEventListener('keydown', onKey);
+    window.scrollTo(0, 0);
+  }
+  function onKey(e) { if (e.key === 'Escape') hide(true); }
+  document.addEventListener('keydown', onKey);
+  box.querySelector('.ftsp-x').addEventListener('click', function () { hide(true); });
+  box.querySelector('.ftsp-skip').addEventListener('click', function () { hide(true); });
+  form.addEventListener('submit', function (e) {
+    e.preventDefault(); msg.className = 'ftn-m';
+    var em = form.email.value.trim(), okc = form.consent.checked;
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(em) || !okc) { msg.textContent = T.bad; msg.className = 'ftn-m er'; return; }
+    var b = form.querySelector('.ftn-b'); b.disabled = true;
+    fetch('/api/subscribe', { method: 'POST', headers: { 'content-type': 'application/json' }, credentials: 'same-origin', body: JSON.stringify({ email: em, consent: true, hp: form.hp.value, lang: en ? 'en' : 'it' }) })
+      .then(function (r) { return r.json().catch(function () { return {}; }); })
+      .then(function (j) {
+        if (j && j.ok) { msg.textContent = T.ok; msg.className = 'ftn-m ok'; form.reset(); setTimeout(function () { hide(false); }, 1800); }
+        else { msg.textContent = (j && j.error === 'email') || (j && j.error === 'consent') ? T.bad : T.err; msg.className = 'ftn-m er'; b.disabled = false; }
+      }).catch(function () { msg.textContent = T.err; msg.className = 'ftn-m er'; b.disabled = false; });
+  });
+  var em0 = form.email; setTimeout(function () { try { em0.focus({ preventScroll: true }); } catch (x) {} }, 50);
+})();
+
 /* Newsletter / FT Club: floating card, closable; subscribing sets a cookie that opens /club/ */
 (function () {
+  var hp0 = location.pathname.replace(/index\.html$/, '');
+  if (hp0 === '/' || hp0 === '/en/' || hp0 === '/en') return;
   if (/^\/club(\/|$)/.test(location.pathname) || /\/newsletter(\.html)?\/?$/.test(location.pathname)) return;
   function ck(n) { var m = document.cookie.match(new RegExp('(?:^|; )' + n + '=([^;]*)')); return m ? m[1] : ''; }
   function setck(n, v, days) { document.cookie = n + '=' + v + '; Path=/; Max-Age=' + days * 86400 + '; SameSite=Lax' + (location.protocol === 'https:' ? '; Secure' : ''); }
@@ -612,11 +677,11 @@ document.addEventListener('click', function (e) {
   if (ck('ft_nl') === 'x' && !forced) return;
   var en = (document.documentElement.lang || 'it').slice(0, 2) === 'en';
   var T = en ? {
-    k: 'NEWSLETTER', h: 'Stay in the loop', c: 'Subscribe to get occasional updates: new content on the site, records and concerts. We only write when there is something substantial, with no fixed schedule.',
+    k: 'NEWSLETTER', h: 'Stay in the loop', c: 'Subscribe to the newsletter for news about the band (new content, records and concerts) and get our Christmas gift: exclusive access to unreleased material from the group, reserved for subscribers only. We only write when there is something substantial, with no fixed schedule.',
     e: 'Your email', a: 'I agree to receive the newsletter. See the', p: 'privacy policy', b: 'Subscribe', x: 'Close', ok: 'Done! Thank you for subscribing.', bad: 'Please enter a valid email and tick the box.', err: 'Something went wrong. Please try again later.',
     f: '', pu: '/en/privacy'
   } : {
-    k: 'NEWSLETTER', h: 'Resta aggiornato', c: 'Iscriviti per ricevere aggiornamenti puntuali: nuovi contenuti sul sito, dischi e concerti. Scriviamo solo quando c’è qualcosa di sostanziale, senza una frequenza fissa.',
+    k: 'NEWSLETTER', h: 'Resta aggiornato', c: 'Iscriviti alla newsletter per ricevere le novità sulla band (nuovi contenuti, dischi e concerti) e ricevere il nostro regalo di Natale: accesso esclusivo a contenuti inediti del gruppo, riservati solo agli iscritti. Scriviamo solo quando c’è qualcosa di sostanziale, senza una frequenza fissa.',
     e: 'La tua email', a: 'Accetto di ricevere la newsletter. Leggi l’', p: 'informativa sulla privacy', b: 'Iscriviti', x: 'Chiudi', ok: 'Fatto! Grazie per l’iscrizione.', bad: 'Inserisci un’email valida e spunta la casella.', err: 'Qualcosa non ha funzionato. Riprova più tardi.',
     f: '', pu: '/privacy'
   };

@@ -29,9 +29,9 @@ export async function onRequestPost({ request, env, waitUntil }) {
     if (env.RESEND_API_KEY) { // welcome e-mail (best effort)
       const o = new URL(request.url).origin, un = o + '/api/unsubscribe?i=' + id + '&t=' + (await unsubToken(env, id));
       const en = lang === 'en';
-      const t = en ? 'Thank you for subscribing to the Frigidaire Tango newsletter.\n\nWe will write occasionally, only when there is something substantial: new content on the site, records or concerts. There is no fixed schedule.\n\nFrigidaire Tango'
-        : 'Grazie per esserti iscritto alla newsletter dei Frigidaire Tango.\n\nTi scriveremo ogni tanto, solo quando c’è qualcosa di sostanziale: nuovi contenuti sul sito, dischi o concerti. Non c’è una frequenza fissa.\n\nFrigidaire Tango';
-      const job = sendBatch(env, [{ to: email, subject: en ? 'Thank you for subscribing' : 'Grazie per l’iscrizione', html: toHtml(t, lang, un), text: t + '\n\n' + un, headers: unsubHeaders(un) }]).catch(() => {});
+      const t = en ? 'Thank you for subscribing to the Frigidaire Tango website!\n\nVery soon you will start receiving our newsletter with the latest news about the band: new content, records and concerts.\n\nUntil then, stay tuned: ' + o + '/en/\n\nFrigidaire Tango'
+        : 'Grazie per esserti iscritto al sito dei Frigidaire Tango!\n\nA breve inizierai a ricevere la nostra newsletter con le ultime novità sulla band: nuovi contenuti, dischi e concerti.\n\nNel frattempo, resta sintonizzato: ' + o + '/\n\nFrigidaire Tango';
+      const job = sendBatch(env, [{ to: email, subject: en ? 'Thank you for subscribing to Frigidaire Tango' : 'Grazie per l’iscrizione a Frigidaire Tango', html: toHtml(t, lang, un), text: t + '\n\n' + un, headers: unsubHeaders(un) }]).catch(() => {});
       if (waitUntil) waitUntil(job); else await job;
     }
   }

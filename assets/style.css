@@ -697,3 +697,26 @@ header.bar,.bar:not(.top7 .bar){background:#000}
 .nlp-d{font:500 12px var(--mono);letter-spacing:.08em;color:var(--muted);margin-right:10px;text-transform:uppercase}
 .nlp-empty{color:var(--muted)}
 .nlp-issue{max-width:680px}.nlp-back{font:500 12px var(--mono);letter-spacing:.1em;text-transform:uppercase}
+
+/* Newsletter splash (home): full-screen first screen */
+html.ftsp-open,html.ftsp-open body{overflow:hidden}
+.ftsp{position:fixed;inset:0;z-index:200;background:#000;display:flex;align-items:center;justify-content:center;overflow-y:auto;opacity:1;transition:opacity .35s ease}
+.ftsp.off{opacity:0;pointer-events:none}
+.ftsp-bg{position:fixed;inset:0;width:100%;height:100%;object-fit:cover;object-position:center top;filter:brightness(.34) contrast(1.1)}
+.ftsp::after{content:"";position:fixed;inset:0;background:linear-gradient(180deg,rgba(0,0,0,.35),rgba(0,0,0,.82));pointer-events:none}
+.ftsp-in{position:relative;z-index:1;width:min(560px,100%);box-sizing:border-box;padding:44px 22px 32px;margin:auto;text-align:center}
+.ftsp-x{position:fixed;top:12px;right:16px;z-index:2;background:none;border:0;color:#fff;font:400 40px/1 var(--body);cursor:pointer;padding:6px 12px}
+.ftsp-x:hover{color:var(--red)}
+.ftsp-brand{margin:0 0 14px;font:400 clamp(36px,8vw,56px)/1 var(--display);letter-spacing:.03em;color:var(--ink)}
+.ftsp-th{display:flex;gap:8px;justify-content:center;margin:0 0 22px}
+.ftsp-th img{width:clamp(44px,11vw,66px);height:auto;aspect-ratio:1/1;object-fit:cover;border:1px solid rgba(255,255,255,.22)}
+.ftsp h2{margin:0 0 10px;font:400 clamp(24px,5vw,32px)/1.1 var(--display);letter-spacing:.02em;color:var(--ice)}
+.ftsp-c{margin:0 0 18px;font-size:15.5px;line-height:1.55;color:#d5dee8}
+.ftsp form{display:grid;gap:10px;text-align:left}
+.ftsp input[type=email]{width:100%;box-sizing:border-box;background:rgba(0,0,0,.7);border:1px solid var(--line);color:var(--ink);padding:12px 14px;font:16px var(--body)}
+.ftsp input[type=email]:focus{border-color:var(--ice);outline:none}
+.ftsp .ftn-a{color:#b9c6d4}
+.ftsp .ftn-m{text-align:center}
+.ftsp-skip{margin-top:18px;background:none;border:0;border-bottom:1px solid var(--muted);color:var(--muted);font:500 12px var(--mono);letter-spacing:.12em;text-transform:uppercase;cursor:pointer;padding:4px 0}
+.ftsp-skip:hover{color:var(--ink);border-color:var(--ink)}
+@media(prefers-reduced-motion:reduce){.ftsp{transition:none}}
