@@ -11,3 +11,6 @@
 /club/*
   Cache-Control: private, no-store
   X-Robots-Tag: noindex, nofollow
+/admin/*
+  Cache-Control: private, no-store
+  X-Robots-Tag: noindex, nofollow

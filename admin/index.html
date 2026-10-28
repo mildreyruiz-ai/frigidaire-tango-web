@@ -1,0 +1,23 @@
+<!doctype html><html lang="it"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><meta name="robots" content="noindex, nofollow"><title>Newsletter — admin</title>
+<style>body{margin:0;background:#000;color:#e8eef4;font:16px/1.5 system-ui,Arial,sans-serif;padding:20px;max-width:760px;margin:auto}h1{font:400 28px Impact,sans-serif;letter-spacing:.04em}h1 span{color:#e4352b}label{display:block;margin:14px 0 4px;color:#93a4b7;font-size:13px;letter-spacing:.08em;text-transform:uppercase}input,textarea{width:100%;box-sizing:border-box;background:#050505;border:1px solid #243242;color:#e8eef4;padding:10px;font:16px system-ui,Arial,sans-serif}textarea{min-height:180px}button{margin:14px 10px 0 0;padding:11px 18px;border:0;background:#243242;color:#fff;font:600 14px system-ui;cursor:pointer}button.go{background:#e4352b}button:disabled{opacity:.5}#o{margin-top:16px;padding:10px;border:1px solid #243242;white-space:pre-wrap}.m{color:#93a4b7;font-size:14px}</style></head><body>
+<h1>Frigidaire <span>Tango</span> — Newsletter</h1>
+<p class="m">Pagina privata. Necesita la clave ADMIN_KEY. Se envía solo a quienes se han suscrito; cada correo lleva su enlace de baja.</p>
+<label>Clave (ADMIN_KEY)</label><input id="k" type="password" autocomplete="off">
+<button id="cnt" type="button">Ver suscriptores</button>
+<label>Asunto (italiano)</label><input id="si">
+<label>Texto (italiano) — separa párrafos con una línea en blanco; los enlaces https:// se vuelven clicables</label><textarea id="bi"></textarea>
+<label>Asunto (inglés) — opcional; si lo dejas vacío, todos reciben el italiano</label><input id="se">
+<label>Texto (inglés)</label><textarea id="be"></textarea>
+<label>Email de prueba</label><input id="t" type="email" placeholder="tu@email.com">
+<button id="bt" type="button">Enviar prueba</button><button id="ba" class="go" type="button">Enviar a todos</button>
+<div id="o" role="status">—</div>
+<script>
+var $=function(i){return document.getElementById(i)},o=$('o');
+function show(t){o.textContent=t}
+function body(extra){return JSON.stringify(Object.assign({key:$('k').value,subject_it:$('si').value,body_it:$('bi').value,subject_en:$('se').value,body_en:$('be').value},extra||{}))}
+function post(extra){return fetch('/api/send',{method:'POST',headers:{'content-type':'application/json'},body:body(extra)}).then(function(r){return r.json()})}
+function msg(j){if(j.ok)return 'Enviados: '+j.sent+(j.test?' (prueba)':' de '+j.total);var e={auth:'Clave incorrecta.',not_configured:'Falta configurar RESEND_API_KEY o el KV en Cloudflare.',italian_required:'Falta asunto o texto en italiano.',email:'Email de prueba no válido.'};return e[j.error]||('Error. Enviados '+(j.sent||0)+', fallidos '+(j.failed||0))}
+$('cnt').onclick=function(){fetch('/api/send?key='+encodeURIComponent($('k').value)).then(function(r){return r.ok?r.json():Promise.reject()}).then(function(j){show('Suscriptores: '+j.total+' (it '+j.it+', en '+j.en+') · correo configurado: '+(j.mail?'sí':'NO'))}).catch(function(){show('Clave incorrecta.')})};
+$('bt').onclick=function(){if(!$('t').value)return show('Escribe un email de prueba.');this.disabled=true;var b=this;show('Enviando prueba…');post({test:$('t').value}).then(function(j){show(msg(j))}).catch(function(){show('Error de red.')}).then(function(){b.disabled=false})};
+$('ba').onclick=function(){if(!confirm('¿Enviar la newsletter a TODOS los suscriptores?'))return;this.disabled=true;var b=this;show('Enviando…');post().then(function(j){show(msg(j))}).catch(function(){show('Error de red.')}).then(function(){b.disabled=false})};
+</script></body></html>

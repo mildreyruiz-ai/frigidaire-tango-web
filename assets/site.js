@@ -612,17 +612,17 @@ document.addEventListener('click', function (e) {
   if (ck('ft_nl') === 'x' && !forced) return;
   var en = (document.documentElement.lang || 'it').slice(0, 2) === 'en';
   var T = en ? {
-    k: 'FT CLUB', h: 'Unreleased music, before anyone else', c: 'Subscribe to the newsletter and unlock a private page with unreleased music and video. We only write when there is real news (new content, records, concerts), with no fixed schedule.',
-    e: 'Your email', a: 'I agree to receive the newsletter. See the', p: 'privacy policy', b: 'Subscribe', x: 'Close', ok: 'Done! Opening the club page…', bad: 'Please enter a valid email and tick the box.', err: 'Something went wrong. Please try again later.',
-    f: 'Already subscribed? Enter your email again to get in.', pu: '/en/privacy'
+    k: 'NEWSLETTER', h: 'Stay in the loop', c: 'Subscribe to get occasional updates: new content on the site, records and concerts. We only write when there is something substantial, with no fixed schedule.',
+    e: 'Your email', a: 'I agree to receive the newsletter. See the', p: 'privacy policy', b: 'Subscribe', x: 'Close', ok: 'Done! Thank you for subscribing.', bad: 'Please enter a valid email and tick the box.', err: 'Something went wrong. Please try again later.',
+    f: '', pu: '/en/privacy'
   } : {
-    k: 'FT CLUB', h: 'Musica inedita, prima di tutti', c: 'Iscriviti alla newsletter e sblocca una pagina riservata con musica e video inediti. Scriviamo solo quando ci sono novità vere (nuovi contenuti, dischi, concerti), senza una frequenza fissa.',
-    e: 'La tua email', a: 'Accetto di ricevere la newsletter. Leggi l’', p: 'informativa sulla privacy', b: 'Iscriviti', x: 'Chiudi', ok: 'Fatto! Ti porto alla pagina del club…', bad: 'Inserisci un’email valida e spunta la casella.', err: 'Qualcosa non ha funzionato. Riprova più tardi.',
-    f: 'Già iscritto? Inserisci di nuovo l’email per entrare.', pu: '/privacy'
+    k: 'NEWSLETTER', h: 'Resta aggiornato', c: 'Iscriviti per ricevere aggiornamenti puntuali: nuovi contenuti sul sito, dischi e concerti. Scriviamo solo quando c’è qualcosa di sostanziale, senza una frequenza fissa.',
+    e: 'La tua email', a: 'Accetto di ricevere la newsletter. Leggi l’', p: 'informativa sulla privacy', b: 'Iscriviti', x: 'Chiudi', ok: 'Fatto! Grazie per l’iscrizione.', bad: 'Inserisci un’email valida e spunta la casella.', err: 'Qualcosa non ha funzionato. Riprova più tardi.',
+    f: '', pu: '/privacy'
   };
   var box = document.createElement('aside');
   box.className = 'ftn'; box.setAttribute('role', 'dialog'); box.setAttribute('aria-labelledby', 'ftn-t'); box.hidden = true;
-  box.innerHTML = '<button type="button" class="ftn-x" aria-label="' + T.x + '">&times;</button><p class="ftn-k" translate="no">' + T.k + '</p><h2 id="ftn-t">' + T.h + '</h2><p class="ftn-c">' + (forced ? T.f : T.c) + '</p>' +
+  box.innerHTML = '<button type="button" class="ftn-x" aria-label="' + T.x + '">&times;</button><p class="ftn-k" translate="no">' + T.k + '</p><h2 id="ftn-t">' + T.h + '</h2><p class="ftn-c">' + T.c + '</p>' +
     '<form novalidate><input type="email" name="email" autocomplete="email" inputmode="email" placeholder="' + T.e + '" aria-label="' + T.e + '" required>' +
     '<input type="text" name="hp" tabindex="-1" autocomplete="off" aria-hidden="true" class="ftn-hp">' +
     '<label class="ftn-a"><input type="checkbox" name="consent"> <span>' + T.a + ' <a href="' + T.pu + '">' + T.p + '</a>.</span></label>' +
@@ -641,7 +641,7 @@ document.addEventListener('click', function (e) {
     fetch('/api/subscribe', { method: 'POST', headers: { 'content-type': 'application/json' }, credentials: 'same-origin', body: JSON.stringify({ email: em, consent: true, hp: form.hp.value, lang: en ? 'en' : 'it' }) })
       .then(function (r) { return r.json().catch(function () { return {}; }); })
       .then(function (j) {
-        if (j && j.ok) { msg.textContent = T.ok; msg.className = 'ftn-m ok'; setTimeout(function () { location.href = j.url; }, 900); }
+        if (j && j.ok) { msg.textContent = T.ok; msg.className = 'ftn-m ok'; form.reset(); setTimeout(function () { hide(false); }, 2500); }
         else { msg.textContent = (j && j.error === 'email') || (j && j.error === 'consent') ? T.bad : T.err; msg.className = 'ftn-m er'; b.disabled = false; }
       }).catch(function () { msg.textContent = T.err; msg.className = 'ftn-m er'; b.disabled = false; });
   });

@@ -7,12 +7,13 @@ export async function clubToken(env) {
   const key = await crypto.subtle.importKey('raw', new TextEncoder().encode(env.CLUB_SECRET || env.ADMIN_KEY || 'ft-club-default'), { name: 'HMAC', hash: 'SHA-256' }, false, ['sign']);
   return hex(await crypto.subtle.sign('HMAC', key, new TextEncoder().encode('ft-club-v1'))).slice(0, 40);
 }
-export async function onRequestPost({ request, env }) {
+import { toHtml, unsubToken, sendBatch, unsubHeaders } from '../_mail.js';
+export async function onRequestPost({ request, env, waitUntil }) {
   if (!env.FAV_KV) return J({ ok: false, error: 'not_configured' }, 503);
   const origin = request.headers.get('origin');
   if (origin && new URL(origin).host !== new URL(request.url).host) return J({ ok: false, error: 'origin' }, 403);
   let b; try { b = await request.json(); } catch (e) { return J({ ok: false, error: 'bad_json' }, 400); }
-  if (b.hp) return J({ ok: true, url: '/club/' });
+  if (b.hp) return J({ ok: true });
   const email = String(b.email || '').trim().toLowerCase().slice(0, 120);
   if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(email)) return J({ ok: false, error: 'email' }, 400);
   if (b.consent !== true) return J({ ok: false, error: 'consent' }, 400);
@@ -23,12 +24,22 @@ export async function onRequestPost({ request, env }) {
   await env.FAV_KV.put(rl, '1', { expirationTtl: 60 });
   const id = hex(await crypto.subtle.digest('SHA-256', new TextEncoder().encode(email))).slice(0, 24);
   const prev = JSON.parse((await env.FAV_KV.get('sub:' + id)) || 'null');
-  if (!prev) await env.FAV_KV.put('sub:' + id, JSON.stringify({ email, lang, since: new Date().toISOString(), consent: 'newsletter+club' }));
+  if (!prev) {
+    await env.FAV_KV.put('sub:' + id, JSON.stringify({ email, lang, since: new Date().toISOString(), consent: 'newsletter' }));
+    if (env.RESEND_API_KEY) { // welcome e-mail (best effort)
+      const o = new URL(request.url).origin, un = o + '/api/unsubscribe?i=' + id + '&t=' + (await unsubToken(env, id));
+      const en = lang === 'en';
+      const t = en ? 'Thank you for subscribing to the Frigidaire Tango newsletter.\n\nWe will write occasionally, only when there is something substantial: new content on the site, records or concerts. There is no fixed schedule.\n\nFrigidaire Tango'
+        : 'Grazie per esserti iscritto alla newsletter dei Frigidaire Tango.\n\nTi scriveremo ogni tanto, solo quando c’è qualcosa di sostanziale: nuovi contenuti sul sito, dischi o concerti. Non c’è una frequenza fissa.\n\nFrigidaire Tango';
+      const job = sendBatch(env, [{ to: email, subject: en ? 'Thank you for subscribing' : 'Grazie per l’iscrizione', html: toHtml(t, lang, un), text: t + '\n\n' + un, headers: unsubHeaders(un) }]).catch(() => {});
+      if (waitUntil) waitUntil(job); else await job;
+    }
+  }
   const tok = await clubToken(env), yr = 31536000;
   const h = new Headers({ 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' });
-  h.append('set-cookie', 'ft_club=' + tok + '; Path=/; Max-Age=' + yr + '; Secure; HttpOnly; SameSite=Lax');
+  // ft_club (access to /club/) is NOT set for now: the unreleased material is not available yet. Re-enable here when /club/ opens.
   h.append('set-cookie', 'ft_member=1; Path=/; Max-Age=' + yr + '; Secure; SameSite=Lax');
-  return new Response(JSON.stringify({ ok: true, url: lang === 'en' ? '/club/en/' : '/club/' }), { status: 200, headers: h });
+  return new Response(JSON.stringify({ ok: true }), { status: 200, headers: h });
 }
 export async function onRequestGet({ request, env }) {
   const u = new URL(request.url), k = u.searchParams.get('key');
