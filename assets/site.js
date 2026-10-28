@@ -615,10 +615,10 @@ document.addEventListener('click', function (e) {
   var en = (document.documentElement.lang || 'it').slice(0, 2) === 'en';
   var T = en ? {
     k: 'NEWSLETTER', h: 'Stay in the loop', c: 'Subscribe to the newsletter for news about the band (new content, records and concerts) and get our Christmas gift: exclusive access to unreleased material from the group, reserved for subscribers only. We only write when there is something substantial, with no fixed schedule.',
-    e: 'Your email', a: 'I agree to receive the newsletter. See the', p: 'privacy policy', b: 'Subscribe', x: 'Close', skip: 'Continue to the site', ok: 'Done! Thank you for subscribing.', bad: 'Please enter a valid email and tick the box.', err: 'Something went wrong. Please try again later.', pu: '/en/privacy'
+    e: 'Your email', a: 'I agree to receive the newsletter. See the', p: 'privacy policy', b: 'Subscribe', x: 'Close', skip: 'Continue to the site', ok: 'Done! Thank you for subscribing.', dup: 'This user is already subscribed to our newsletter.', bad: 'Please enter a valid email and tick the box.', err: 'Something went wrong. Please try again later.', pu: '/en/privacy'
   } : {
     k: 'NEWSLETTER', h: 'Resta aggiornato', c: 'Iscriviti alla newsletter per ricevere le novità sulla band (nuovi contenuti, dischi e concerti) e ricevere il nostro regalo di Natale: accesso esclusivo a contenuti inediti del gruppo, riservati solo agli iscritti. Scriviamo solo quando c’è qualcosa di sostanziale, senza una frequenza fissa.',
-    e: 'La tua email', a: 'Accetto di ricevere la newsletter. Leggi l’', p: 'informativa sulla privacy', b: 'Iscriviti', x: 'Chiudi', skip: 'Continua sul sito', ok: 'Fatto! Grazie per l’iscrizione.', bad: 'Inserisci un’email valida e spunta la casella.', err: 'Qualcosa non ha funzionato. Riprova più tardi.', pu: '/privacy'
+    e: 'La tua email', a: 'Accetto di ricevere la newsletter. Leggi l’', p: 'informativa sulla privacy', b: 'Iscriviti', x: 'Chiudi', skip: 'Continua sul sito', ok: 'Fatto! Grazie per l’iscrizione.', dup: 'Questo utente è già iscritto alla nostra newsletter.', bad: 'Inserisci un’email valida e spunta la casella.', err: 'Qualcosa non ha funzionato. Riprova più tardi.', pu: '/privacy'
   };
   var hero = document.querySelector('.hero > img');
   var thumbs = [].slice.call(document.querySelectorAll('.heroband img')).map(function (i) { return '<img src="' + i.getAttribute('src') + '" alt="" width="320" height="320">'; }).join('');
@@ -658,7 +658,8 @@ document.addEventListener('click', function (e) {
     fetch('/api/subscribe', { method: 'POST', headers: { 'content-type': 'application/json' }, credentials: 'same-origin', body: JSON.stringify({ email: em, consent: true, hp: form.hp.value, lang: en ? 'en' : 'it' }) })
       .then(function (r) { return r.json().catch(function () { return {}; }); })
       .then(function (j) {
-        if (j && j.ok) { msg.textContent = T.ok; msg.className = 'ftn-m ok'; form.reset(); setTimeout(function () { hide(false); }, 1800); }
+        if (j && j.ok && j.already) { msg.textContent = T.dup; msg.className = 'ftn-m ok'; b.disabled = false; }
+        else if (j && j.ok) { msg.textContent = T.ok; msg.className = 'ftn-m ok'; form.reset(); setTimeout(function () { hide(false); }, 1800); }
         else { msg.textContent = (j && j.error === 'email') || (j && j.error === 'consent') ? T.bad : T.err; msg.className = 'ftn-m er'; b.disabled = false; }
       }).catch(function () { msg.textContent = T.err; msg.className = 'ftn-m er'; b.disabled = false; });
   });
@@ -678,11 +679,11 @@ document.addEventListener('click', function (e) {
   var en = (document.documentElement.lang || 'it').slice(0, 2) === 'en';
   var T = en ? {
     k: 'NEWSLETTER', h: 'Stay in the loop', c: 'Subscribe to the newsletter for news about the band (new content, records and concerts) and get our Christmas gift: exclusive access to unreleased material from the group, reserved for subscribers only. We only write when there is something substantial, with no fixed schedule.',
-    e: 'Your email', a: 'I agree to receive the newsletter. See the', p: 'privacy policy', b: 'Subscribe', x: 'Close', ok: 'Done! Thank you for subscribing.', bad: 'Please enter a valid email and tick the box.', err: 'Something went wrong. Please try again later.',
+    e: 'Your email', a: 'I agree to receive the newsletter. See the', p: 'privacy policy', b: 'Subscribe', x: 'Close', ok: 'Done! Thank you for subscribing.', dup: 'This user is already subscribed to our newsletter.', bad: 'Please enter a valid email and tick the box.', err: 'Something went wrong. Please try again later.',
     f: '', pu: '/en/privacy'
   } : {
     k: 'NEWSLETTER', h: 'Resta aggiornato', c: 'Iscriviti alla newsletter per ricevere le novità sulla band (nuovi contenuti, dischi e concerti) e ricevere il nostro regalo di Natale: accesso esclusivo a contenuti inediti del gruppo, riservati solo agli iscritti. Scriviamo solo quando c’è qualcosa di sostanziale, senza una frequenza fissa.',
-    e: 'La tua email', a: 'Accetto di ricevere la newsletter. Leggi l’', p: 'informativa sulla privacy', b: 'Iscriviti', x: 'Chiudi', ok: 'Fatto! Grazie per l’iscrizione.', bad: 'Inserisci un’email valida e spunta la casella.', err: 'Qualcosa non ha funzionato. Riprova più tardi.',
+    e: 'La tua email', a: 'Accetto di ricevere la newsletter. Leggi l’', p: 'informativa sulla privacy', b: 'Iscriviti', x: 'Chiudi', ok: 'Fatto! Grazie per l’iscrizione.', dup: 'Questo utente è già iscritto alla nostra newsletter.', bad: 'Inserisci un’email valida e spunta la casella.', err: 'Qualcosa non ha funzionato. Riprova più tardi.',
     f: '', pu: '/privacy'
   };
   var box = document.createElement('aside');
@@ -706,7 +707,8 @@ document.addEventListener('click', function (e) {
     fetch('/api/subscribe', { method: 'POST', headers: { 'content-type': 'application/json' }, credentials: 'same-origin', body: JSON.stringify({ email: em, consent: true, hp: form.hp.value, lang: en ? 'en' : 'it' }) })
       .then(function (r) { return r.json().catch(function () { return {}; }); })
       .then(function (j) {
-        if (j && j.ok) { msg.textContent = T.ok; msg.className = 'ftn-m ok'; form.reset(); setTimeout(function () { hide(false); }, 2500); }
+        if (j && j.ok && j.already) { msg.textContent = T.dup; msg.className = 'ftn-m ok'; b.disabled = false; }
+        else if (j && j.ok) { msg.textContent = T.ok; msg.className = 'ftn-m ok'; form.reset(); setTimeout(function () { hide(false); }, 2500); }
         else { msg.textContent = (j && j.error === 'email') || (j && j.error === 'consent') ? T.bad : T.err; msg.className = 'ftn-m er'; b.disabled = false; }
       }).catch(function () { msg.textContent = T.err; msg.className = 'ftn-m er'; b.disabled = false; });
   });
@@ -717,8 +719,8 @@ document.addEventListener('click', function (e) {
 (function () {
   var form = document.getElementById('nl-form'); if (!form) return;
   var en = (document.documentElement.lang || 'it').slice(0, 2) === 'en';
-  var T = en ? { bad: 'Please enter a valid email and tick the box.', err: 'Something went wrong. Please try again later.', ok: 'Done! Thank you for subscribing.', back: '← All newsletters', load: 'Loading…', nf: 'Newsletter not found.' }
-             : { bad: 'Inserisci un’email valida e spunta la casella.', err: 'Qualcosa non ha funzionato. Riprova più tardi.', ok: 'Fatto! Grazie per l’iscrizione.', back: '← Tutte le newsletter', load: 'Caricamento…', nf: 'Newsletter non trovata.' };
+  var T = en ? { bad: 'Please enter a valid email and tick the box.', err: 'Something went wrong. Please try again later.', ok: 'Done! Thank you for subscribing.', dup: 'This user is already subscribed to our newsletter.', back: '← All newsletters', load: 'Loading…', nf: 'Newsletter not found.' }
+             : { bad: 'Inserisci un’email valida e spunta la casella.', err: 'Qualcosa non ha funzionato. Riprova più tardi.', ok: 'Fatto! Grazie per l’iscrizione.', dup: 'Questo utente è già iscritto alla nostra newsletter.', back: '← Tutte le newsletter', load: 'Caricamento…', nf: 'Newsletter non trovata.' };
   var msg = form.querySelector('.nlp-m');
   form.addEventListener('submit', function (e) {
     e.preventDefault(); msg.className = 'nlp-m';
@@ -727,7 +729,7 @@ document.addEventListener('click', function (e) {
     var b = form.querySelector('.nlp-b'); b.disabled = true;
     fetch('/api/subscribe', { method: 'POST', headers: { 'content-type': 'application/json' }, credentials: 'same-origin', body: JSON.stringify({ email: em, consent: true, hp: form.hp.value, lang: en ? 'en' : 'it' }) })
       .then(function (r) { return r.json().catch(function () { return {}; }); })
-      .then(function (j) { if (j && j.ok) { msg.textContent = T.ok; msg.className = 'nlp-m ok'; form.reset(); } else { msg.textContent = (j && (j.error === 'email' || j.error === 'consent')) ? T.bad : T.err; msg.className = 'nlp-m er'; } b.disabled = false; })
+      .then(function (j) { if (j && j.ok && j.already) { msg.textContent = T.dup; msg.className = 'nlp-m ok'; } else if (j && j.ok) { msg.textContent = T.ok; msg.className = 'nlp-m ok'; form.reset(); } else { msg.textContent = (j && (j.error === 'email' || j.error === 'consent')) ? T.bad : T.err; msg.className = 'nlp-m er'; } b.disabled = false; })
       .catch(function () { msg.textContent = T.err; msg.className = 'nlp-m er'; b.disabled = false; });
   });
   var list = document.getElementById('nl-archive'), main = document.getElementById('nl-main'), issue = document.getElementById('nl-issue');

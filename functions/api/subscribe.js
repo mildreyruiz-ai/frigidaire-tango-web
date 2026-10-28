@@ -35,11 +35,11 @@ export async function onRequestPost({ request, env, waitUntil }) {
       if (waitUntil) waitUntil(job); else await job;
     }
   }
-  const tok = await clubToken(env), yr = 31536000;
+  const already = !!prev, tok = await clubToken(env), yr = 31536000;
   const h = new Headers({ 'content-type': 'application/json; charset=utf-8', 'cache-control': 'no-store' });
   // ft_club (access to /club/) is NOT set for now: the unreleased material is not available yet. Re-enable here when /club/ opens.
   h.append('set-cookie', 'ft_member=1; Path=/; Max-Age=' + yr + '; Secure; SameSite=Lax');
-  return new Response(JSON.stringify({ ok: true }), { status: 200, headers: h });
+  return new Response(JSON.stringify(already ? { ok: true, already: true } : { ok: true }), { status: 200, headers: h });
 }
 export async function onRequestGet({ request, env }) {
   const u = new URL(request.url), k = u.searchParams.get('key');
