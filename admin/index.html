@@ -9,12 +9,13 @@
 <label>Asunto (inglés) — opcional; si lo dejas vacío, todos reciben el italiano</label><input id="se">
 <label>Texto (inglés)</label><textarea id="be"></textarea>
 <label>Email de prueba</label><input id="t" type="email" placeholder="tu@email.com">
+<label style="text-transform:none;letter-spacing:0;font-size:15px;color:#e8eef4"><input id="ar" type="checkbox" checked style="width:auto"> Publicar también en el archivo público (/newsletter) al enviar a todos</label>
 <button id="bt" type="button">Enviar prueba</button><button id="ba" class="go" type="button">Enviar a todos</button>
 <div id="o" role="status">—</div>
 <script>
 var $=function(i){return document.getElementById(i)},o=$('o');
 function show(t){o.textContent=t}
-function body(extra){return JSON.stringify(Object.assign({key:$('k').value,subject_it:$('si').value,body_it:$('bi').value,subject_en:$('se').value,body_en:$('be').value},extra||{}))}
+function body(extra){return JSON.stringify(Object.assign({key:$('k').value,subject_it:$('si').value,body_it:$('bi').value,subject_en:$('se').value,body_en:$('be').value,archive:$('ar').checked},extra||{}))}
 function post(extra){return fetch('/api/send',{method:'POST',headers:{'content-type':'application/json'},body:body(extra)}).then(function(r){return r.json()})}
 function msg(j){if(j.ok)return 'Enviados: '+j.sent+(j.test?' (prueba)':' de '+j.total);var e={auth:'Clave incorrecta.',not_configured:'Falta configurar RESEND_API_KEY o el KV en Cloudflare.',italian_required:'Falta asunto o texto en italiano.',email:'Email de prueba no válido.'};return e[j.error]||('Error. Enviados '+(j.sent||0)+', fallidos '+(j.failed||0))}
 $('cnt').onclick=function(){fetch('/api/send?key='+encodeURIComponent($('k').value)).then(function(r){return r.ok?r.json():Promise.reject()}).then(function(j){show('Suscriptores: '+j.total+' (it '+j.it+', en '+j.en+') · correo configurado: '+(j.mail?'sí':'NO'))}).catch(function(){show('Clave incorrecta.')})};

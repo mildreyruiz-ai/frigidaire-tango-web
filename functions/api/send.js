@@ -30,5 +30,9 @@ export async function onRequestPost({ request, env }) {
   const subs = await allSubs(env);
   const msgs = []; for (const s of subs) msgs.push(await build(s));
   const r = await sendBatch(env, msgs);
-  return J({ ok: r.failed === 0, sent: r.sent, failed: r.failed, total: subs.length });
+  if (r.sent > 0 && b.archive !== false) { // publish in the public archive (/newsletter)
+    const date = new Date().toISOString();
+    await env.FAV_KV.put('nl:' + date, JSON.stringify({ date, subject_it: it.s, body_it: it.t, subject_en: en.s, body_en: en.t }));
+  }
+  return J({ ok: r.failed === 0, sent: r.sent, failed: r.failed, total: subs.length, archived: r.sent > 0 && b.archive !== false });
 }

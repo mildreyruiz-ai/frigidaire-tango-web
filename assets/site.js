@@ -604,7 +604,7 @@ document.addEventListener('click', function (e) {
 
 /* Newsletter / FT Club: floating card, closable; subscribing sets a cookie that opens /club/ */
 (function () {
-  if (/^\/club(\/|$)/.test(location.pathname)) return;
+  if (/^\/club(\/|$)/.test(location.pathname) || /\/newsletter(\.html)?\/?$/.test(location.pathname)) return;
   function ck(n) { var m = document.cookie.match(new RegExp('(?:^|; )' + n + '=([^;]*)')); return m ? m[1] : ''; }
   function setck(n, v, days) { document.cookie = n + '=' + v + '; Path=/; Max-Age=' + days * 86400 + '; SameSite=Lax' + (location.protocol === 'https:' ? '; Secure' : ''); }
   var forced = /[?&]club=1/.test(location.search);
@@ -646,4 +646,42 @@ document.addEventListener('click', function (e) {
       }).catch(function () { msg.textContent = T.err; msg.className = 'ftn-m er'; b.disabled = false; });
   });
   setTimeout(show, forced ? 300 : 7000);
+})();
+
+/* Newsletter page: subscribe form + public archive */
+(function () {
+  var form = document.getElementById('nl-form'); if (!form) return;
+  var en = (document.documentElement.lang || 'it').slice(0, 2) === 'en';
+  var T = en ? { bad: 'Please enter a valid email and tick the box.', err: 'Something went wrong. Please try again later.', ok: 'Done! Thank you for subscribing.', back: '← All newsletters', load: 'Loading…', nf: 'Newsletter not found.' }
+             : { bad: 'Inserisci un’email valida e spunta la casella.', err: 'Qualcosa non ha funzionato. Riprova più tardi.', ok: 'Fatto! Grazie per l’iscrizione.', back: '← Tutte le newsletter', load: 'Caricamento…', nf: 'Newsletter non trovata.' };
+  var msg = form.querySelector('.nlp-m');
+  form.addEventListener('submit', function (e) {
+    e.preventDefault(); msg.className = 'nlp-m';
+    var em = form.email.value.trim();
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(em) || !form.consent.checked) { msg.textContent = T.bad; msg.className = 'nlp-m er'; return; }
+    var b = form.querySelector('.nlp-b'); b.disabled = true;
+    fetch('/api/subscribe', { method: 'POST', headers: { 'content-type': 'application/json' }, credentials: 'same-origin', body: JSON.stringify({ email: em, consent: true, hp: form.hp.value, lang: en ? 'en' : 'it' }) })
+      .then(function (r) { return r.json().catch(function () { return {}; }); })
+      .then(function (j) { if (j && j.ok) { msg.textContent = T.ok; msg.className = 'nlp-m ok'; form.reset(); } else { msg.textContent = (j && (j.error === 'email' || j.error === 'consent')) ? T.bad : T.err; msg.className = 'nlp-m er'; } b.disabled = false; })
+      .catch(function () { msg.textContent = T.err; msg.className = 'nlp-m er'; b.disabled = false; });
+  });
+  var list = document.getElementById('nl-archive'), main = document.getElementById('nl-main'), issue = document.getElementById('nl-issue');
+  function esc(s) { return String(s).replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;'); }
+  function fmt(d) { try { return new Date(d).toLocaleDateString(en ? 'en-GB' : 'it-IT', { day: 'numeric', month: 'long', year: 'numeric' }); } catch (e) { return d.slice(0, 10); } }
+  function render(it) {
+    var useEn = en && it.subject_en && it.body_en, sub = useEn ? it.subject_en : it.subject_it, body = useEn ? it.body_en : it.body_it;
+    var html = String(body).split(/\n{2,}/).map(function (p) { return '<p>' + esc(p).replace(/\n/g, '<br>').replace(/(https?:\/\/[^\s<]+)/g, '<a href="$1" rel="noopener">$1</a>') + '</p>'; }).join('');
+    issue.innerHTML = '<p><a href="' + location.pathname + '" class="nlp-back">' + T.back + '</a></p><h2>' + esc(sub) + '</h2><p class="nlp-d">' + fmt(it.date) + '</p>' + html;
+    main.hidden = true; issue.hidden = false; document.title = sub + ' — Frigidaire Tango';
+  }
+  var id = new URLSearchParams(location.search).get('n');
+  if (id) {
+    issue.hidden = false; main.hidden = true; issue.textContent = T.load;
+    fetch('/api/newsletters?id=' + encodeURIComponent(id)).then(function (r) { return r.ok ? r.json() : Promise.reject(); }).then(render).catch(function () { issue.innerHTML = '<p>' + T.nf + '</p><p><a href="' + location.pathname + '" class="nlp-back">' + T.back + '</a></p>'; });
+  }
+  if (list) fetch('/api/newsletters').then(function (r) { return r.json(); }).then(function (j) {
+    var items = (j && j.items) || [];
+    if (!items.length) { list.innerHTML = '<li class="nlp-empty">' + esc(list.getAttribute('data-empty')) + '</li>'; return; }
+    list.innerHTML = items.map(function (it) { var s = en && it.subject_en ? it.subject_en : it.subject_it; return '<li><a href="?n=' + encodeURIComponent(it.id) + '"><span class="nlp-d">' + fmt(it.date) + '</span> ' + esc(s) + '</a></li>'; }).join('');
+  }).catch(function () { list.innerHTML = '<li class="nlp-empty">' + esc(list.getAttribute('data-empty')) + '</li>'; });
 })();
