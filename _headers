@@ -8,3 +8,6 @@
   Cache-Control: public, max-age=0, must-revalidate
 /assets/photos/*
   Cache-Control: public, max-age=2592000
+/club/*
+  Cache-Control: private, no-store
+  X-Robots-Tag: noindex, nofollow

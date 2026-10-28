@@ -601,3 +601,49 @@ document.addEventListener('click', function (e) {
     });
   });
 })();
+
+/* Newsletter / FT Club: floating card, closable; subscribing sets a cookie that opens /club/ */
+(function () {
+  if (/^\/club(\/|$)/.test(location.pathname)) return;
+  function ck(n) { var m = document.cookie.match(new RegExp('(?:^|; )' + n + '=([^;]*)')); return m ? m[1] : ''; }
+  function setck(n, v, days) { document.cookie = n + '=' + v + '; Path=/; Max-Age=' + days * 86400 + '; SameSite=Lax' + (location.protocol === 'https:' ? '; Secure' : ''); }
+  var forced = /[?&]club=1/.test(location.search);
+  if (ck('ft_member') === '1' && !forced) return;
+  if (ck('ft_nl') === 'x' && !forced) return;
+  var en = (document.documentElement.lang || 'it').slice(0, 2) === 'en';
+  var T = en ? {
+    k: 'FT CLUB', h: 'Unreleased music, before anyone else', c: 'Subscribe to the newsletter and unlock a private page with unreleased music and video. We only write when there is real news (new content, records, concerts), with no fixed schedule.',
+    e: 'Your email', a: 'I agree to receive the newsletter. See the', p: 'privacy policy', b: 'Subscribe', x: 'Close', ok: 'Done! Opening the club page…', bad: 'Please enter a valid email and tick the box.', err: 'Something went wrong. Please try again later.',
+    f: 'Already subscribed? Enter your email again to get in.', pu: '/en/privacy'
+  } : {
+    k: 'FT CLUB', h: 'Musica inedita, prima di tutti', c: 'Iscriviti alla newsletter e sblocca una pagina riservata con musica e video inediti. Scriviamo solo quando ci sono novità vere (nuovi contenuti, dischi, concerti), senza una frequenza fissa.',
+    e: 'La tua email', a: 'Accetto di ricevere la newsletter. Leggi l’', p: 'informativa sulla privacy', b: 'Iscriviti', x: 'Chiudi', ok: 'Fatto! Ti porto alla pagina del club…', bad: 'Inserisci un’email valida e spunta la casella.', err: 'Qualcosa non ha funzionato. Riprova più tardi.',
+    f: 'Già iscritto? Inserisci di nuovo l’email per entrare.', pu: '/privacy'
+  };
+  var box = document.createElement('aside');
+  box.className = 'ftn'; box.setAttribute('role', 'dialog'); box.setAttribute('aria-labelledby', 'ftn-t'); box.hidden = true;
+  box.innerHTML = '<button type="button" class="ftn-x" aria-label="' + T.x + '">&times;</button><p class="ftn-k" translate="no">' + T.k + '</p><h2 id="ftn-t">' + T.h + '</h2><p class="ftn-c">' + (forced ? T.f : T.c) + '</p>' +
+    '<form novalidate><input type="email" name="email" autocomplete="email" inputmode="email" placeholder="' + T.e + '" aria-label="' + T.e + '" required>' +
+    '<input type="text" name="hp" tabindex="-1" autocomplete="off" aria-hidden="true" class="ftn-hp">' +
+    '<label class="ftn-a"><input type="checkbox" name="consent"> <span>' + T.a + ' <a href="' + T.pu + '">' + T.p + '</a>.</span></label>' +
+    '<button type="submit" class="ftn-b">' + T.b + '</button></form><p class="ftn-m" role="status" aria-live="polite"></p>';
+  document.body.appendChild(box);
+  var msg = box.querySelector('.ftn-m'), form = box.querySelector('form');
+  function show() { box.hidden = false; requestAnimationFrame(function () { box.classList.add('on'); }); }
+  function hide(remember) { box.classList.remove('on'); setTimeout(function () { box.hidden = true; }, 250); if (remember) setck('ft_nl', 'x', 30); }
+  box.querySelector('.ftn-x').addEventListener('click', function () { hide(true); });
+  document.addEventListener('keydown', function (e) { if (e.key === 'Escape' && !box.hidden) hide(true); });
+  form.addEventListener('submit', function (e) {
+    e.preventDefault(); msg.className = 'ftn-m';
+    var em = form.email.value.trim(), okc = form.consent.checked;
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(em) || !okc) { msg.textContent = T.bad; msg.className = 'ftn-m er'; return; }
+    var b = form.querySelector('.ftn-b'); b.disabled = true;
+    fetch('/api/subscribe', { method: 'POST', headers: { 'content-type': 'application/json' }, credentials: 'same-origin', body: JSON.stringify({ email: em, consent: true, hp: form.hp.value, lang: en ? 'en' : 'it' }) })
+      .then(function (r) { return r.json().catch(function () { return {}; }); })
+      .then(function (j) {
+        if (j && j.ok) { msg.textContent = T.ok; msg.className = 'ftn-m ok'; setTimeout(function () { location.href = j.url; }, 900); }
+        else { msg.textContent = (j && j.error === 'email') || (j && j.error === 'consent') ? T.bad : T.err; msg.className = 'ftn-m er'; b.disabled = false; }
+      }).catch(function () { msg.textContent = T.err; msg.className = 'ftn-m er'; b.disabled = false; });
+  });
+  setTimeout(show, forced ? 300 : 7000);
+})();

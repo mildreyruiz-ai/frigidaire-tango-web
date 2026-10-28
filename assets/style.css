@@ -656,3 +656,26 @@ header.bar,.bar:not(.top7 .bar){background:#000}
 .dp-vid iframe{display:block;width:100%;max-width:720px;aspect-ratio:16/9;border:0;background:#000}
 .dayplay .dp-x{margin:6px 0 2px;font-size:14px}
 @media(max-width:600px){.dayplay{margin-inline:0;padding:12px}.dp-n{margin-left:0}}
+
+/* Newsletter / FT Club floating card */
+.ftn{position:fixed;right:16px;bottom:16px;z-index:60;width:min(380px,calc(100vw - 32px));background:#050505;border:1px solid var(--line);border-top:2px solid var(--red);padding:18px 18px 16px;box-shadow:0 12px 40px rgba(0,0,0,.7);opacity:0;transform:translateY(16px);transition:opacity .25s,transform .25s}
+.ftn.on{opacity:1;transform:none}
+.ftn[hidden]{display:none}
+.ftn-x{position:absolute;top:6px;right:8px;background:none;border:0;color:var(--muted);font:400 28px/1 var(--body);cursor:pointer;padding:4px 8px}
+.ftn-x:hover{color:var(--red)}
+.ftn-k{margin:0 0 4px;font:500 11px var(--mono);letter-spacing:.16em;color:var(--red)}
+.ftn h2{margin:0 0 8px;font:400 24px/1.1 var(--display);letter-spacing:.02em;color:var(--ink);padding-right:28px}
+.ftn-c{margin:0 0 12px;font-size:14px;line-height:1.5;color:var(--muted)}
+.ftn form{display:grid;gap:10px}
+.ftn input[type=email]{width:100%;box-sizing:border-box;background:#000;border:1px solid var(--line);color:var(--ink);padding:10px 12px;font:16px var(--body)}
+.ftn input[type=email]:focus{border-color:var(--ice);outline:none}
+.ftn-hp{position:absolute;left:-9999px;width:1px;height:1px;opacity:0}
+.ftn-a{display:flex;gap:8px;align-items:flex-start;font-size:12.5px;line-height:1.4;color:var(--muted)}
+.ftn-a input{margin-top:3px;accent-color:var(--red)}
+.ftn-b{background:var(--red);color:#fff;border:0;padding:11px 14px;font:500 13px var(--mono);letter-spacing:.12em;text-transform:uppercase;cursor:pointer}
+.ftn-b:hover{filter:brightness(1.15)}
+.ftn-b:disabled{opacity:.6;cursor:wait}
+.ftn-m{margin:8px 0 0;min-height:1em;font-size:13px}
+.ftn-m.er{color:#ff8a80}.ftn-m.ok{color:var(--ice)}
+@media(max-width:560px){.ftn{right:12px;left:12px;bottom:12px;width:auto}.ftn h2{font-size:22px}}
+@media(prefers-reduced-motion:reduce){.ftn{transition:none}}
