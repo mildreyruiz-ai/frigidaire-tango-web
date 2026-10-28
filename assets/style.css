@@ -717,6 +717,8 @@ html.ftsp-open,html.ftsp-open body{overflow:hidden}
 .ftsp input[type=email]:focus{border-color:var(--ice);outline:none}
 .ftsp .ftn-a{color:#b9c6d4}
 .ftsp .ftn-m{text-align:center}
-.ftsp-skip{margin-top:18px;background:none;border:0;border-bottom:1px solid var(--muted);color:var(--muted);font:500 12px var(--mono);letter-spacing:.12em;text-transform:uppercase;cursor:pointer;padding:4px 0}
-.ftsp-skip:hover{color:var(--ink);border-color:var(--ink)}
+.ftsp-btns{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.ftsp-skip{background:rgba(0,0,0,.45);border:1px solid var(--ink);color:var(--ink);padding:11px 14px;font:500 13px var(--mono);letter-spacing:.12em;text-transform:uppercase;cursor:pointer}
+@media(max-width:480px){.ftsp-btns{grid-template-columns:1fr}}
+.ftsp-skip:hover{background:var(--ink);color:#000}
 @media(prefers-reduced-motion:reduce){.ftsp{transition:none}}

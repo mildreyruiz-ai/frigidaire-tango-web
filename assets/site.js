@@ -609,7 +609,8 @@ document.addEventListener('click', function (e) {
   if (!home) return;
   function ck(n) { var m = document.cookie.match(new RegExp('(?:^|; )' + n + '=([^;]*)')); return m ? m[1] : ''; }
   function setck(n, v, days) { document.cookie = n + '=' + v + '; Path=/; Max-Age=' + days * 86400 + '; SameSite=Lax' + (location.protocol === 'https:' ? '; Secure' : ''); }
-  var forced = /[?&]club=1/.test(location.search);
+  var TEST_ALWAYS = true; /* PRUEBA: pantalla en cada visita. Poner false para que respete las cookies */
+  var forced = TEST_ALWAYS || /[?&]club=1/.test(location.search);
   if ((ck('ft_member') === '1' || ck('ft_nl') === 'x') && !forced) return;
   var en = (document.documentElement.lang || 'it').slice(0, 2) === 'en';
   var T = en ? {
@@ -631,8 +632,7 @@ document.addEventListener('click', function (e) {
     '<form novalidate><input type="email" name="email" autocomplete="email" inputmode="email" placeholder="' + T.e + '" aria-label="' + T.e + '" required>' +
     '<input type="text" name="hp" tabindex="-1" autocomplete="off" aria-hidden="true" class="ftn-hp">' +
     '<label class="ftn-a"><input type="checkbox" name="consent"> <span>' + T.a + ' <a href="' + T.pu + '">' + T.p + '</a>.</span></label>' +
-    '<button type="submit" class="ftn-b">' + T.b + '</button></form><p class="ftn-m" role="status" aria-live="polite"></p>' +
-    '<button type="button" class="ftsp-skip">' + T.skip + ' →</button></div>';
+    '<div class="ftsp-btns"><button type="submit" class="ftn-b">' + T.b + '</button><button type="button" class="ftsp-skip">' + T.skip + ' →</button></div></form><p class="ftn-m" role="status" aria-live="polite"></p></div>';
   document.body.appendChild(box);
   document.documentElement.classList.add('ftsp-open');
   var kids = [].slice.call(document.body.children).filter(function (n) { return n !== box && n.tagName !== 'SCRIPT'; });
