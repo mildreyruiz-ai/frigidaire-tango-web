@@ -605,7 +605,7 @@ document.addEventListener('click', function (e) {
 /* Newsletter splash: full-screen first screen on the home page (hero photo + subscribe form); closing or subscribing reveals the index */
 (function () {
   var p = location.pathname.replace(/index\.html$/, '');
-  var home = p === '/' || p === '/en/' || p === '/en';
+  var home = p === '/' || p === '/en/' || p === '/en' || !!document.getElementById('new-album');
   if (!home) return;
   function ck(n) { var m = document.cookie.match(new RegExp('(?:^|; )' + n + '=([^;]*)')); return m ? m[1] : ''; }
   function setck(n, v, days) { document.cookie = n + '=' + v + '; Path=/; Max-Age=' + days * 86400 + '; SameSite=Lax' + (location.protocol === 'https:' ? '; Secure' : ''); }
@@ -668,8 +668,10 @@ document.addEventListener('click', function (e) {
 
 /* Newsletter / FT Club: floating card, closable; subscribing sets a cookie that opens /club/ */
 (function () {
+  var CARD_ENABLED = false; /* aviso flotante desactivado: la suscripción se ofrece solo en la pantalla de entrada del home. Poner true para reactivarlo en las demás páginas */
+  if (!CARD_ENABLED) return;
   var hp0 = location.pathname.replace(/index\.html$/, '');
-  if (hp0 === '/' || hp0 === '/en/' || hp0 === '/en') return;
+  if (hp0 === '/' || hp0 === '/en/' || hp0 === '/en' || document.getElementById('new-album')) return; /* home: la pantalla de entrada ya ofrece la suscripción */
   if (/^\/club(\/|$)/.test(location.pathname) || /\/newsletter(\.html)?\/?$/.test(location.pathname)) return;
   function ck(n) { var m = document.cookie.match(new RegExp('(?:^|; )' + n + '=([^;]*)')); return m ? m[1] : ''; }
   function setck(n, v, days) { document.cookie = n + '=' + v + '; Path=/; Max-Age=' + days * 86400 + '; SameSite=Lax' + (location.protocol === 'https:' ? '; Secure' : ''); }

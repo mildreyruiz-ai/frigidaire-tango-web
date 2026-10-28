@@ -722,3 +722,34 @@ html.ftsp-open,html.ftsp-open body{overflow:hidden}
 @media(max-width:480px){.ftsp-btns{grid-template-columns:1fr}}
 .ftsp-skip:hover{background:var(--ink);color:#000}
 @media(prefers-reduced-motion:reduce){.ftsp{transition:none}}
+
+/* vinyl sleeve + buy block inside the home promo (Pickup Records) */
+.promo .wrap{grid-template-columns:minmax(0,430px) 1fr}
+.sleeve{position:relative;width:100%;aspect-ratio:100/66;max-width:430px}
+.sleeve>img{position:absolute;left:0;top:0;width:66%;aspect-ratio:1;height:auto;object-fit:cover;z-index:2;border:1px solid rgba(255,255,255,.18);box-shadow:0 24px 60px rgba(0,0,0,.65);transform-origin:50% 100%;animation:sleeveSwing 5.5s ease-in-out infinite}
+.sleeve .disc{position:absolute;left:0;top:0;width:66%;aspect-ratio:1;height:auto;z-index:1;border-radius:50%;background:repeating-radial-gradient(circle at 50% 50%,#0b0b0b 0 2px,#161616 2px 3px),#050505;box-shadow:0 10px 30px rgba(0,0,0,.6);transform:translateX(8%);animation:discOut 1.6s .5s cubic-bezier(.2,.8,.2,1) forwards;transition:transform .6s cubic-bezier(.2,.8,.2,1)}
+.sleeve .disc i{position:absolute;inset:0;border-radius:50%;background:conic-gradient(from 0deg,transparent 0 20%,rgba(255,255,255,.1) 25%,transparent 32% 70%,rgba(255,255,255,.08) 76%,transparent 82%);animation:discSpin 6s linear infinite}
+.sleeve .disc::after{content:"";position:absolute;inset:36%;border-radius:50%;background:radial-gradient(circle,#0a0a0a 0 7%,var(--red) 8% 100%);box-shadow:0 0 0 3px rgba(0,0,0,.4)}
+.promo:hover .sleeve .disc,.dcover:hover .sleeve .disc{transform:translateX(50%)}
+.leftcol{min-width:0}
+.buytxt{margin-top:22px}
+.buytxt .tag{display:inline-block;font:500 11px var(--mono);letter-spacing:.16em;text-transform:uppercase;background:var(--red);color:#fff;padding:4px 10px}
+.buytxt p{font-size:15px;color:#c9d4df;max-width:52ch;margin:14px 0 0}
+.buytxt .btns{margin-top:18px}
+.buytxt .cap{margin-top:12px}
+.promo .cap.contact{margin-top:22px}
+@keyframes sleeveSwing{0%,100%{transform:rotate(-1.6deg)}50%{transform:rotate(1.6deg)}}
+@keyframes discOut{to{transform:translateX(50%)}}
+@keyframes discSpin{to{transform:rotate(360deg)}}
+@media (max-width:760px){.promo .wrap{grid-template-columns:1fr}.leftcol{display:contents}.sleeve{order:1;max-width:340px;margin-inline:auto}.promo .wrap>div:not(.leftcol){order:2}.promo .buytxt{order:3;margin-top:0}}
+@media (prefers-reduced-motion:reduce){.sleeve>img,.sleeve .disc i{animation:none}.sleeve .disc{animation:none;transform:translateX(50%)}}
+
+/* disc pages: animated sleeve + CD/vinyl buy block */
+.dhead.has-sleeve{grid-template-columns:minmax(0,430px) minmax(0,1fr)}
+.dcover .tag{display:inline-block;font:500 11px var(--mono);letter-spacing:.16em;text-transform:uppercase;background:var(--red);color:#fff;padding:4px 10px}
+.dcover .buytxt p{font-size:15px;color:#c9d4df;max-width:52ch;margin:14px 0 0}
+.dcover .buytxt .cap{margin-top:12px}
+.sleeve.cd .disc{background:conic-gradient(from 20deg,#d9dde2,#9aa3ad 12%,#eef1f4 24%,#8e98a4 38%,#cfd5db 52%,#a4adb7 66%,#f2f4f6 80%,#aab3bd 92%,#d9dde2);box-shadow:0 10px 30px rgba(0,0,0,.55)}
+.sleeve.cd .disc i{background:conic-gradient(from 0deg,transparent 0 18%,rgba(255,255,255,.55) 24%,transparent 32% 66%,rgba(255,255,255,.4) 74%,transparent 82%)}
+.sleeve.cd .disc::after{inset:34%;background:radial-gradient(circle,#0a0a0a 0 22%,rgba(255,255,255,.35) 23% 30%,rgba(235,240,245,.85) 31% 100%);box-shadow:0 0 0 2px rgba(0,0,0,.25)}
+@media (max-width:760px){.dhead.has-sleeve{grid-template-columns:1fr}.dcover{max-width:none}.dcover .sleeve{max-width:340px;margin-inline:auto}}
