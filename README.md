@@ -12,8 +12,8 @@ Live site: **https://frigidairetango.com** (Italian) · **https://frigidairetang
 
 | | |
 |---|---|
-| Pages | 59 HTML pages: 30 in Italian and 29 in English, translated one to one |
-| Content | 16 record pages, 114 archive audio tracks, hundreds of photos, embedded video, press and news |
+| Pages | 61 HTML pages: 31 in Italian and 30 in English, translated one to one |
+| Content | 16 record pages, 118 recordings in the dated archive, hundreds of photos, embedded video, press and news |
 | Stack | HTML5, CSS3 and vanilla JavaScript, no framework and no build step |
 | Hosting | Cloudflare Pages, deployed automatically from GitHub on every push |
 | Backend | Cloudflare Pages Functions (serverless) and Cloudflare KV storage |
@@ -25,11 +25,21 @@ Live site: **https://frigidairetango.com** (Italian) · **https://frigidairetang
 ### Content and navigation
 - **Band, story and timeline:** the band's history from the 1977 beginnings to the present, with members and former members.
 - **Discography:** one page per record (16 in total) with cover, credits and listening links or players.
-- **Gallery (audio, video and photos by date):** the archive is organised by concert or recording session. Each date shows its photos and posters and, below them, a "same day: listen and watch" block with the recordings from that very night. 29 dated entries and 114 tracks, playable in the page without leaving it.
+- **Gallery (audio, video and photos by date):** the archive is organised by concert or recording session. Each date shows its photos and posters and, below them, a "same day: listen and watch" block with the recordings from that very night. 44 dated entries with audio and 118 tracks, playable in the page without leaving it.
 - **Videos:** YouTube clips played inside the page.
 - **Press:** reviews and interviews, always linked to the original sources.
-- **News:** announcements such as a book presentation and live dates, plus a "most listened" ranking of songs.
+- **News:** one data file (`assets/news-data.js`) feeds both the home page cards and a year/month/day archive on the News page, in Italian and English. The latest announcement (for example the tribute concert *Una notte per il Bandito*) is published first, with its poster, an event fact sheet and `MusicEvent` structured data. A sticky sub-menu stays visible all the way down the News page, with a flashing **Top 7** badge and a link to the archive.
+- **Monthly Top 7:** see the next section.
 - **Favourite-song vote:** visitors can vote for a favourite song. Votes are stored in Cloudflare KV and feed the ranking.
+
+### Monthly Top 7 of the most played songs (semi-automated)
+A chart of the band's most played tracks is published every month and kept as a permanent page, so the archive grows with the band.
+
+- **One page per month**, in both languages (`news-top7-ottobre.html`, `en/news-top7-october.html`, and so on). Each page opens with a large "ad" style announcement of the all-time number one track (*Recall*, from *Music for us*): animated headline, cover art, a "No. 1" burst, a play button and the listening figures. Below it comes the month's Top 7 with an in-page player for every track (Deezer widget) and a YouTube link where one exists, plus the favourite-song vote.
+- **Own visual identity:** a starburst **TOP 7** badge that flashes between the band's red and yellow, used on the sticky News sub-menu, on the home page card and in the page headings. The month is plain text, so it simply changes from one month to the next. Motion is switched off for visitors who prefer reduced motion.
+- **Where it shows up:** sticky sub-menu on News, home page card and `#top7` section, entry in the news archive, `sitemap.xml` with `hreflang`.
+- **Method:** a combined index. Each track's Spotify plays and Deezer popularity rank are scaled to the leading track (100) and averaged. Deezer exposes a popularity rank, not plays, and its public API (`api.deezer.com/track/<id>`) can be read by a script; Spotify's public pages, even for a signed-in listener, do not show per-track play counts, so those figures come from a manual snapshot. When Spotify counts cannot be verified, the page says so and the ranking is based on Deezer only, with no invented numbers.
+- **Automation:** a scheduled task runs at the end of each month (the first one on 29 November 2026). It re-checks the data online, builds the new month's page by cloning the previous one, moves the sticky link, home card and news entry to it, leaves the previous month as an archive page, and tells the owner what to publish. Publishing stays a human step: the task prepares the files and the site owner commits and pushes with GitHub Desktop, which triggers the Cloudflare deploy. Nothing goes live without that push.
 
 ### Newsletter and subscriber system
 Built from scratch on serverless functions, with no third-party newsletter platform:
@@ -86,9 +96,9 @@ Secrets (`RESEND_API_KEY`, `ADMIN_KEY`, optional `CLUB_SECRET`) live in Cloudfla
 
 ```
 frigidaire-tango-web/
-├── *.html            Italian pages (home, band, story, records, discs, press, news, newsletter…)
+├── *.html            Italian pages (home, band, story, records, discs, press, news, monthly Top 7, newsletter…)
 ├── en/               English version of every page
-├── assets/           style.css, site.js, photos, audio, images
+├── assets/           style.css, site.js, news-data.js (news archive), photos, audio, images (img/top7: cover crops for the chart)
 ├── functions/        Cloudflare Pages Functions (api/ and club/) and the mail helper
 ├── admin/            private newsletter admin page
 ├── club/             members area (guarded)
@@ -126,7 +136,9 @@ Built with an AI-assisted workflow (Claude) for drafting, review and testing. De
 
 Sitio web oficial y bilingüe (italiano e inglés) de Frigidaire Tango, publicado en frigidairetango.com. Lo diseñé, desarrollé y puse en producción yo.
 
-**Qué incluye:** historia y línea de tiempo de la banda, una página por cada disco (16), una galería de audio, vídeo y fotos organizada por fecha de concierto (29 fechas y 114 temas), vídeos, prensa, noticias con ranking de canciones y voto de la canción favorita.
+**Qué incluye:** historia y línea de tiempo de la banda, una página por cada disco (16), una galería de audio, vídeo y fotos organizada por fecha de concierto (44 fechas con audio y 118 temas), vídeos, prensa, noticias y voto de la canción favorita.
+
+**Top 7 mensual semiautomatizado:** cada mes se publica una página con el ranking de las canciones más escuchadas (índice combinado de Spotify y Deezer), abierta por un anuncio grande del tema nº 1 de todos los tiempos (*Recall*), con sello "TOP 7" parpadeante, submenú fijo en Noticias y tarjeta en la home. Una tarea programada prepara cada mes la página nueva (la primera, el 29 de noviembre de 2026) y deja la anterior como archivo; la publicación sigue siendo manual (commit y push). Deezer se puede consultar por API; las páginas públicas de Spotify no muestran reproducciones por tema, por lo que esas cifras son una foto manual y, si no se pueden verificar, la página lo indica.
 
 **Newsletter propia, sin plataformas externas:** pantalla de entrada a pantalla completa con la foto de la banda, aviso flotante en el resto del sitio, detección de correos ya suscritos, email de bienvenida automático en el idioma del visitante, panel privado para enviar newsletters (prueba y envío masivo), archivo público de newsletters, baja con un clic y privacidad cuidada (consentimiento, antispam y política en dos idiomas). Además hay un área para miembros preparada para el contenido inédito.
 
