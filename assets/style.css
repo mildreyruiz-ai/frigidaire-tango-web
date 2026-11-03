@@ -800,3 +800,8 @@ html.ftsp-open,html.ftsp-open body{overflow:hidden}
 @media (max-width:760px){.adgrid{grid-template-columns:1fr}.adhero .adcover{width:min(78%,300px);margin-top:14px}}
 @media (prefers-reduced-motion:reduce){.t7b,.t7b .bi,.adhero h2.adt,.adhero .adk s{animation:none}}
 #top7 h2.top7h{display:flex;align-items:center;gap:16px;flex-wrap:wrap}
+/* sub-menu News anclado: hijo directo de <main> para que se quede visible en toda la pagina */
+main>.vnav{padding-inline:max(20px,calc((100% - 1080px)/2 + 20px));margin:0;z-index:12}
+main>.vnav+section{padding-top:8px}
+#news{padding-bottom:0}
+main>.vnav{top:var(--vtop,50px)}
