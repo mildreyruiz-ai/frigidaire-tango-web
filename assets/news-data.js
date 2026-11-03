@@ -3,6 +3,16 @@
    For the Italian version add title_it, text_it, kind_it. Order does not matter. */
 window.FT_NEWS=[
   {
+    "date": "2026-11-07",
+    "kind": "Concert",
+    "title": "Una notte per il Bandito: a tribute to Gianfranco Gandolfi at Vinile",
+    "text": "Saturday 7 November 2026, 9:30 pm, at Vinile in Rosà (VI): friends and artists, including the Frigidaire Tango All Stars, remember Gianfranco through music.",
+    "url": "#notte-del-bandito",
+    "kind_it": "Concerto",
+    "title_it": "Una notte per il Bandito: omaggio a Gianfranco Gandolfi al Vinile",
+    "text_it": "Sabato 7 novembre 2026, ore 21:30, al Vinile di Rosà (VI): amici e artisti, tra cui i Frigidaire Tango All Stars, ricordano Gianfranco attraverso la musica."
+  },
+  {
     "date": "2026-10-22",
     "kind": "Chart",
     "title": "The most played Frigidaire Tango tracks of all time",
