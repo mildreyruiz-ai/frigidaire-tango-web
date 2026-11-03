@@ -15,12 +15,13 @@ window.FT_NEWS=[
   {
     "date": "2026-10-22",
     "kind": "Chart",
-    "title": "The most played Frigidaire Tango tracks of all time",
-    "text": "Spotify and Deezer data combined into a top 7: Recall leads the chart. Tell us which is your favourite track.",
-    "url": "#piu-ascoltati",
+    "title": "October top 7: Recall is the most played track of all time",
+    "text": "The October top 7 from combined Spotify and Deezer data: Recall leads the chart. Tell us which is your favourite track.",
+    "url": "news-top7-october.html",
+    "url_it": "news-top7-ottobre.html",
     "kind_it": "Classifica",
-    "title_it": "I brani più ascoltati dei Frigidaire Tango di tutti i tempi",
-    "text_it": "I dati di Spotify e Deezer uniti in una top 7: Recall è in testa. Dicci qual è il tuo brano preferito."
+    "title_it": "Top 7 di ottobre: Recall è il brano più ascoltato di sempre",
+    "text_it": "La Top 7 di ottobre con i dati di Spotify e Deezer uniti: Recall è in testa. Dicci qual è il tuo brano preferito."
   },
   {
     "date": "2026-10-31",
