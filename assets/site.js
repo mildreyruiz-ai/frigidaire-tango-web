@@ -796,7 +796,7 @@ document.addEventListener('click', function (e) {
     var b = document.createElement('div'); b.className = 'ftck'; b.setAttribute('role', 'dialog'); b.setAttribute('aria-label', 'Cookie');
     b.innerHTML = '<p>' + T.t + ' <a href="' + T.u + '">' + T.p + '</a>.</p><div><button type="button" data-v="granted">' + T.y + '</button><button type="button" data-v="denied">' + T.n + '</button></div>';
     b.addEventListener('click', function (e) {
-      var v = e.target.getAttribute && e.target.getAttribute('data-v'); if (!v) return;
+      var bt = e.target.closest && e.target.closest('[data-v]'); if (!bt) return; var v = bt.getAttribute('data-v');
       set(v); if (v === 'granted') { gtag('consent', 'update', { analytics_storage: 'granted' }); load(); } b.remove();
     });
     document.body.appendChild(b);
