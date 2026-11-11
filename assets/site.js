@@ -760,7 +760,7 @@ document.addEventListener('click', function (e) {
 /* ===== Analytics (Google Analytics 4) with cookie consent =====
    1) Paste the GA4 measurement ID (starts with G-) below. While it stays G-XXXXXXXXXX nothing loads and no banner is shown.
    2) Google's script is requested only after the visitor accepts. The choice is kept in localStorage (ft_consent).
-   Events: sign_up (newsletter), vote_favorite_song, audio_play, video_start, click_listen, click_social, click_email. */
+   Events: sign_up (newsletter), vote_favorite_song, audio_play, video_start, click_listen, click_social, click_email, click_related_site. */
 (function () {
   var GA_ID = 'G-6XVR90Z65R';
   if (!/^G-[A-Z0-9]{6,}$/.test(GA_ID) || GA_ID === 'G-XXXXXXXXXX') return;
@@ -828,6 +828,9 @@ document.addEventListener('click', function (e) {
     var h = a.getAttribute('href') || '';
     if (/^mailto:/i.test(h)) { track('click_email'); return; }
     if (!/^https?:/i.test(h) || a.hostname === location.hostname) return;
+    /* Links to the sister sites: which page and which part of it sends people there */
+    var rel = /(^|\.)thevindicators\.it$/.test(a.hostname) ? 'thevindicators.it' : /(^|\.)mildreyruiz\.com$/.test(a.hostname) ? 'mildreyruiz.com' : '';
+    if (rel) { track('click_related_site', { destination: rel, link_position: a.closest('footer') ? 'footer' : a.closest('header') ? 'header' : 'content' }); return; }
     for (var i = 0; i < LISTEN.length; i++) if (LISTEN[i][1].test(h)) { track('click_listen', { platform: LISTEN[i][0], link_url: h.slice(0, 200) }); return; }
     for (var j = 0; j < SOCIAL.length; j++) if (SOCIAL[j][1].test(h)) { track('click_social', { platform: SOCIAL[j][0] }); return; }
   }, true);
