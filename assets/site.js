@@ -609,9 +609,11 @@ document.addEventListener('click', function (e) {
   if (!home) return;
   function ck(n) { var m = document.cookie.match(new RegExp('(?:^|; )' + n + '=([^;]*)')); return m ? m[1] : ''; }
   function setck(n, v, days) { document.cookie = n + '=' + v + '; Path=/; Max-Age=' + days * 86400 + '; SameSite=Lax' + (location.protocol === 'https:' ? '; Secure' : ''); }
-  var TEST_ALWAYS = true; /* PRUEBA: pantalla en cada visita. Poner false para que respete las cookies */
-  var forced = TEST_ALWAYS || /[?&]club=1/.test(location.search);
-  if ((ck('ft_member') === '1' || ck('ft_nl') === 'x') && !forced) return;
+  /* Hasta Navidad: la pantalla sale en cada visita mientras el visitante no esté suscrito (ft_member).
+     Poner false para que, además, respete los 30 días tras cerrarla (ft_nl). */
+  var ALWAYS_UNTIL_SUBSCRIBED = true;
+  var forced = /[?&]club=1/.test(location.search);
+  if (!forced && (ck('ft_member') === '1' || (!ALWAYS_UNTIL_SUBSCRIBED && ck('ft_nl') === 'x'))) return;
   var en = (document.documentElement.lang || 'it').slice(0, 2) === 'en';
   var T = en ? {
     k: 'NEWSLETTER', h: 'Stay in the loop', c: 'Subscribe to the newsletter for news about the band (new content, records and concerts) and get our Christmas gift: exclusive access to unreleased material from the group, reserved for subscribers only. We only write when there is something substantial, with no fixed schedule.',
@@ -753,4 +755,94 @@ document.addEventListener('click', function (e) {
     if (!items.length) { list.innerHTML = '<li class="nlp-empty">' + esc(list.getAttribute('data-empty')) + '</li>'; return; }
     list.innerHTML = items.map(function (it) { var s = en && it.subject_en ? it.subject_en : it.subject_it; return '<li><a href="?n=' + encodeURIComponent(it.id) + '"><span class="nlp-d">' + fmt(it.date) + '</span> ' + esc(s) + '</a></li>'; }).join('');
   }).catch(function () { list.innerHTML = '<li class="nlp-empty">' + esc(list.getAttribute('data-empty')) + '</li>'; });
+})();
+
+/* ===== Analytics (Google Analytics 4) with cookie consent =====
+   1) Paste the GA4 measurement ID (starts with G-) below. While it stays G-XXXXXXXXXX nothing loads and no banner is shown.
+   2) Google's script is requested only after the visitor accepts. The choice is kept in localStorage (ft_consent).
+   Events: sign_up (newsletter), vote_favorite_song, audio_play, video_start, click_listen, click_social, click_email. */
+(function () {
+  var GA_ID = 'G-6XVR90Z65R';
+  if (!/^G-[A-Z0-9]{6,}$/.test(GA_ID) || GA_ID === 'G-XXXXXXXXXX') return;
+  if (location.protocol === 'file:') return;
+  var en = (document.documentElement.lang || 'it').slice(0, 2) === 'en';
+  var KEY = 'ft_consent';
+  function get() { try { return localStorage.getItem(KEY); } catch (e) { return null; } }
+  function set(v) { try { localStorage.setItem(KEY, v); } catch (e) {} }
+  window.dataLayer = window.dataLayer || [];
+  function gtag() { dataLayer.push(arguments); }
+  window.gtag = gtag;
+  gtag('consent', 'default', { analytics_storage: 'denied', ad_storage: 'denied', ad_user_data: 'denied', ad_personalization: 'denied' });
+  if (get() === 'granted') gtag('consent', 'update', { analytics_storage: 'granted' });
+  gtag('js', new Date());
+  gtag('config', GA_ID, { page_language: en ? 'en' : 'it' });
+  var loaded = false;
+  function load() { if (loaded) return; loaded = true; var s = document.createElement('script'); s.async = true; s.src = 'https://www.googletagmanager.com/gtag/js?id=' + GA_ID; document.head.appendChild(s); }
+  if (get() === 'granted') load();
+  function track(n, p) { try { gtag('event', n, p || {}); } catch (e) {} }
+
+  /* Cookie banner */
+  function banner() {
+    if (document.querySelector('.ftck')) return;
+    var T = en ? { t: 'We use statistics cookies (Google Analytics) only if you accept, to understand how the site is used.', p: 'Privacy policy', u: '/en/privacy.html', y: 'Accept', n: 'Decline' }
+               : { t: 'Usiamo cookie statistici (Google Analytics) solo se accetti, per capire come viene usato il sito.', p: 'Informativa sulla privacy', u: '/privacy.html', y: 'Accetta', n: 'Rifiuta' };
+    var st = document.createElement('style');
+    st.textContent = '.ftck{position:fixed;left:16px;bottom:16px;z-index:300;width:min(400px,calc(100vw - 32px));background:#050505;border:1px solid #243242;border-top:2px solid #8cc4ea;padding:14px 16px;color:#e8eef4;font:14px/1.45 "IBM Plex Sans",system-ui,sans-serif;box-shadow:0 10px 40px rgba(0,0,0,.6)}' +
+      '.ftck p{margin:0 0 12px}.ftck a{color:#8cc4ea}.ftck div{display:flex;gap:10px}' +
+      '.ftck button{flex:1;padding:9px 12px;font:600 13px/1 "IBM Plex Mono",ui-monospace,monospace;letter-spacing:.06em;text-transform:uppercase;cursor:pointer;background:#000;color:#e8eef4;border:1px solid #e8eef4}' +
+      '.ftck button:hover,.ftck button:focus-visible{background:#e8eef4;color:#000}' +
+      '@media(max-width:560px){.ftck{left:12px;right:12px;bottom:12px;width:auto}}';
+    document.head.appendChild(st);
+    var b = document.createElement('div'); b.className = 'ftck'; b.setAttribute('role', 'dialog'); b.setAttribute('aria-label', 'Cookie');
+    b.innerHTML = '<p>' + T.t + ' <a href="' + T.u + '">' + T.p + '</a>.</p><div><button type="button" data-v="granted">' + T.y + '</button><button type="button" data-v="denied">' + T.n + '</button></div>';
+    b.addEventListener('click', function (e) {
+      var v = e.target.getAttribute && e.target.getAttribute('data-v'); if (!v) return;
+      set(v); if (v === 'granted') { gtag('consent', 'update', { analytics_storage: 'granted' }); load(); } b.remove();
+    });
+    document.body.appendChild(b);
+  }
+  /* On the home page the newsletter screen comes first: the cookie notice waits until it is closed */
+  function ask() { if (!document.querySelector('.ftsp')) { banner(); return; } var iv = setInterval(function () { if (!document.querySelector('.ftsp')) { clearInterval(iv); banner(); } }, 400); }
+  if (!get()) ask();
+  /* "Change my choice" links on the privacy page */
+  document.addEventListener('click', function (e) {
+    var r = e.target.closest && e.target.closest('[data-ck-reset]'); if (!r) return;
+    e.preventDefault(); try { localStorage.removeItem(KEY); } catch (x) {}
+    gtag('consent', 'update', { analytics_storage: 'denied' }); banner();
+  });
+
+  /* Events */
+  var once = {};
+  function file(s) { try { return decodeURIComponent(String(s).split('?')[0].split('/').pop().replace(/\.[a-z0-9]+$/i, '')).slice(0, 100); } catch (e) { return ''; } }
+  var LISTEN = [['spotify', /spotify\.com/], ['deezer', /deezer\.com/], ['apple_music', /music\.apple\.com|itunes\.apple\.com/], ['youtube', /youtube\.com|youtu\.be/], ['soundcloud', /soundcloud\.com/], ['bandcamp', /bandcamp\.com/], ['amazon', /amazon\.|music\.amazon/], ['tidal', /tidal\.com/]];
+  var SOCIAL = [['facebook', /facebook\.com/], ['instagram', /instagram\.com/], ['tiktok', /tiktok\.com/], ['x', /twitter\.com|\/\/x\.com/]];
+  document.addEventListener('click', function (e) {
+    var t = e.target; if (!t.closest) return;
+    var au = t.closest('[data-audio]');
+    if (au) { var s = au.getAttribute('data-audio'); if (!once['a' + s]) { once['a' + s] = 1; track('audio_play', { track: file(s), player: 'site' }); } }
+    var dz = t.closest('[data-dz]');
+    if (dz) { var d = dz.getAttribute('data-dz'); if (!once['d' + d]) { once['d' + d] = 1; track('audio_play', { track: 'deezer:' + d, player: 'deezer' }); } }
+    var yt = t.closest('.yt') || (t.closest('.dp-vb') && t.closest('[data-yt]'));
+    if (yt) { var v = yt.getAttribute('data-yt') || yt.getAttribute('data-id') || ''; if (v && !once['v' + v]) { once['v' + v] = 1; track('video_start', { video_id: v }); } }
+    var a = t.closest('a[href]'); if (!a) return;
+    var h = a.getAttribute('href') || '';
+    if (/^mailto:/i.test(h)) { track('click_email'); return; }
+    if (!/^https?:/i.test(h) || a.hostname === location.hostname) return;
+    for (var i = 0; i < LISTEN.length; i++) if (LISTEN[i][1].test(h)) { track('click_listen', { platform: LISTEN[i][0], link_url: h.slice(0, 200) }); return; }
+    for (var j = 0; j < SOCIAL.length; j++) if (SOCIAL[j][1].test(h)) { track('click_social', { platform: SOCIAL[j][0] }); return; }
+  }, true);
+  /* Newsletter sign-ups and favourite-song votes: read the answer of the site's own API calls */
+  var of = window.fetch;
+  if (of) window.fetch = function (u, o) {
+    var p = of.apply(this, arguments);
+    try {
+      var m = /\/api\/(subscribe|favorite)(?:$|[?#])/.exec(typeof u === 'string' ? u : (u && u.url) || '');
+      if (m && o && o.method === 'POST') p.then(function (r) { return r.clone().json(); }).then(function (j) {
+        if (!j || !j.ok || j.already) return;
+        if (m[1] === 'subscribe') track('sign_up', { method: 'newsletter' });
+        else { var song = ''; try { song = JSON.parse(o.body).song || ''; } catch (x) {} track('vote_favorite_song', { song: String(song).slice(0, 100) }); }
+      }).catch(function () {});
+    } catch (e) {}
+    return p;
+  };
 })();
