@@ -350,6 +350,41 @@ location.href='mailto:Frigidaire%20Tango%20%3Cchichoi60@gmail.com%3E?subject='+e
 })();
 
 
+/* Listening stats: anonymous play counters (no cookies, no visitor id) -> POST /api/listen */
+(function () {
+  var EP = '/api/listen', LANG = document.documentElement.lang === 'en' ? 'en' : 'it';
+  function send(o) {
+    o.lang = LANG; o.pg = location.pathname.slice(0, 120);
+    try { var j = JSON.stringify(o); if (!(navigator.sendBeacon && navigator.sendBeacon(EP, new Blob([j], { type: 'application/json' })))) fetch(EP, { method: 'POST', body: j, headers: { 'content-type': 'application/json' }, keepalive: true }); } catch (e) {}
+  }
+  function norm(u) { try { return decodeURIComponent(new URL(u, location.href).pathname.replace(/^\//, '')); } catch (e) { return ''; } }
+  var live = [];
+  function watch(a) {
+    var s = null, last = 0;
+    function flush() {
+      if (!s) return; var x = s; s = null;
+      var done = x.done || (isFinite(a.duration) && a.duration > 0 && x.secs >= a.duration * 0.9);
+      if (x.secs >= 3 || done) send({ src: 'site', key: x.key, title: x.title, secs: Math.round(x.secs), maxpos: Math.round(x.max), dur: isFinite(x.dur) ? Math.round(x.dur) : 0, done: done ? 1 : 0 });
+    }
+    a._ftFlush = flush; live.push(a);
+    a.addEventListener('play', function () {
+      if (s) return; var p = norm(a.currentSrc || a.src); if (!p) return;
+      var li = document.querySelector('.tl2 li.playing, .dayplay li.playing'), tt = li && li.querySelector('.tt, .dp-t');
+      s = { key: 'a:' + p, title: tt ? tt.textContent.trim().slice(0, 100) : '', secs: 0, max: 0, dur: a.duration, done: false }; last = a.currentTime;
+    });
+    a.addEventListener('timeupdate', function () { if (!s) return; var d = a.currentTime - last; if (d > 0 && d < 1.5) s.secs += d; last = a.currentTime; if (a.currentTime > s.max) s.max = a.currentTime; if (isFinite(a.duration)) s.dur = a.duration; });
+    a.addEventListener('seeking', function () { last = a.currentTime; });
+    a.addEventListener('ended', function () { if (s) { s.done = true; s.max = s.dur || s.max; } flush(); });
+    a.addEventListener('emptied', flush);
+  }
+  var A = window.Audio;
+  if (A) { window.Audio = function (src) { var a = arguments.length ? new A(src) : new A(); try { watch(a); } catch (e) {} return a; }; window.Audio.prototype = A.prototype; }
+  window.addEventListener('pagehide', function () { live.forEach(function (a) { a._ftFlush(); }); });
+  var recent = {};
+  function once(k) { var n = Date.now(); if (recent[k] && n - recent[k] < 8000) return false; recent[k] = n; return true; }
+  window._ftListen = { send: send, once: once, norm: norm };
+})();
+
 /* Listen buttons: load the Deezer player only on click */
 document.addEventListener('click', function (e) {
   var b = e.target.closest && e.target.closest('button.play[data-dz]'); if (!b) return;
@@ -360,6 +395,22 @@ document.addEventListener('click', function (e) {
   i.title = b.getAttribute('data-t') + ' \u2014 Deezer'; i.width = '100%'; i.height = '92'; i.setAttribute('allow', 'encrypted-media; clipboard-write'); i.setAttribute('loading', 'lazy'); i.style.border = '0';
   d.appendChild(i); host.appendChild(d); b.classList.add('on');
 });
+
+/* Listening stats: Deezer widget opened in page + clicks to external listening platforms */
+document.addEventListener('click', function (e) {
+  var L = window._ftListen; if (!L || !e.target.closest) return;
+  var b = e.target.closest('button.play[data-dz]');
+  if (b) { if (b.classList.contains('on') && L.once('d' + b.getAttribute('data-dz'))) L.send({ src: 'widget', key: 'd:' + b.getAttribute('data-dz'), title: (b.getAttribute('data-t') || '').slice(0, 100) }); return; }
+  var a = e.target.closest('.tl2 li a[href]'); if (!a) return;
+  var li = a.closest('li'), key = null, m;
+  var au = li.getAttribute('data-audio'); if (au) key = 'a:' + L.norm(au);
+  else if ((m = (li.querySelector('a.dz') || {}).href && li.querySelector('a.dz').href.match(/track\/(\d+)/))) key = 'd:' + m[1];
+  else if ((m = (li.querySelector('a.yti') || {}).href && li.querySelector('a.yti').href.match(/[?&]v=([\w-]{6,})/))) key = 'y:' + m[1];
+  if (!key || a.hostname === location.hostname) return;
+  var h = a.hostname, pf = /deezer/.test(h) ? 'deezer' : /youtu/.test(h) ? 'youtube' : /spotify/.test(h) ? 'spotify' : /apple/.test(h) ? 'apple' : 'other';
+  if (L.once(key + pf)) L.send({ src: 'link', pf: pf, key: key });
+});
+
 
 /* Band page: ex-member photos, each enlarges on its own */
 (function () {
