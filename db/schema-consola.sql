@@ -1,0 +1,4 @@
+CREATE TABLE IF NOT EXISTS tracks ( key TEXT PRIMARY KEY, album_slug TEXT NOT NULL, album_title TEXT NOT NULL, pos INTEGER NOT NULL, title TEXT NOT NULL, dur INTEGER );
+CREATE TABLE IF NOT EXISTS plays ( id INTEGER PRIMARY KEY AUTOINCREMENT, ts TEXT NOT NULL DEFAULT (strftime('%Y-%m-%d %H:%M:%S','now')), key TEXT NOT NULL, src TEXT NOT NULL, pf TEXT, secs INTEGER, maxpos INTEGER, dur INTEGER, done INTEGER, title TEXT, pg TEXT, lang TEXT, country TEXT );
+CREATE INDEX IF NOT EXISTS plays_ts ON plays(ts);
+CREATE INDEX IF NOT EXISTS plays_key ON plays(key);
