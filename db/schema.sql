@@ -22,3 +22,5 @@ CREATE TABLE IF NOT EXISTS plays (
 );
 CREATE INDEX IF NOT EXISTS plays_ts ON plays(ts);
 CREATE INDEX IF NOT EXISTS plays_key ON plays(key);
+
+
