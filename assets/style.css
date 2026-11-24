@@ -818,3 +818,13 @@ main>.vnav{top:var(--vtop,50px)}
 .vault .vs.hot b{color:var(--red)}
 .vault .vs span{font:500 12px var(--mono);letter-spacing:.1em;text-transform:uppercase;color:var(--muted);max-width:26ch}
 .vault .vp{max-width:60ch;color:var(--muted);margin:0 0 24px}
+
+/* Press archive thumbnails */
+.arch-thumbs{display:flex;flex-wrap:wrap;gap:10px;margin-top:12px}
+.arch-th{position:relative;padding:0;border:1px solid var(--line);background:var(--bg2);cursor:zoom-in;line-height:0;transition:border-color .15s,transform .15s}
+.arch-th img{display:block;height:116px;width:auto;max-width:200px;object-fit:cover;filter:grayscale(.15)}
+.arch-th::after{content:"\2922";position:absolute;right:4px;bottom:4px;width:22px;height:22px;display:grid;place-items:center;font:400 14px/1 var(--mono);color:#fff;background:rgba(0,0,0,.6);opacity:0;transition:opacity .15s}
+.arch-th:hover,.arch-th:focus-visible{border-color:var(--ice);outline:none}
+.arch-th:hover::after,.arch-th:focus-visible::after{opacity:1}
+@media (hover:none){.arch-th::after{opacity:1}}
+@media (max-width:560px){.arch-th img{height:92px;max-width:150px}}

@@ -57,6 +57,40 @@ document.querySelectorAll('.yt').forEach(function (b) {
   var UI = { en: { none: 'Month not specified', one: ' item', many: ' items', def: 'News', noscript: 'The archive needs JavaScript to be displayed.' },
              it: { none: 'Mese non specificato', one: ' notizia', many: ' notizie', def: 'News' } };
   var lang = 'en';
+  var PBASE = /\/en\//.test(location.pathname) ? '../' : '';
+  var pdlg, pidx = 0, plist = [], popener = null;
+  function openPress(list, k, opener) {
+    if (!window.HTMLDialogElement) { window.open(PBASE + 'assets/press/' + list[k].n + '.jpg', '_blank'); return; }
+    plist = list; pidx = k; popener = opener;
+    var L = lang === 'it';
+    if (!pdlg) {
+      pdlg = document.createElement('dialog'); pdlg.className = 'lb';
+      pdlg.innerHTML = '<button class="lb-x" type="button">\u00d7</button><button class="lb-p" type="button">\u2039</button><button class="lb-n" type="button">\u203a</button><figure><img alt=""><figcaption translate="no"><span class="lb-c"></span><span class="lb-k"></span></figcaption></figure>';
+      document.body.appendChild(pdlg);
+      pdlg.querySelector('.lb-x').onclick = function () { pdlg.close(); };
+      pdlg.querySelector('.lb-p').onclick = function () { pgo(-1); };
+      pdlg.querySelector('.lb-n').onclick = function () { pgo(1); };
+      pdlg.addEventListener('click', function (e) { if (e.target === pdlg || e.target.tagName === 'FIGURE') pdlg.close(); });
+      pdlg.addEventListener('keydown', function (e) { if (e.key === 'ArrowLeft') { e.preventDefault(); pgo(-1); } else if (e.key === 'ArrowRight') { e.preventDefault(); pgo(1); } });
+      var x0 = null;
+      pdlg.addEventListener('touchstart', function (e) { x0 = e.touches[0].clientX; }, { passive: true });
+      pdlg.addEventListener('touchend', function (e) { if (x0 === null) return; var dx = e.changedTouches[0].clientX - x0; x0 = null; if (Math.abs(dx) > 50) pgo(dx < 0 ? 1 : -1); });
+      pdlg.addEventListener('close', function () { if (popener && popener.isConnected) popener.focus({ preventScroll: true }); });
+    }
+    pdlg.classList.toggle('single', plist.length < 2);
+    pdlg.querySelector('.lb-x').setAttribute('aria-label', L ? 'Chiudi' : 'Close');
+    pdlg.querySelector('.lb-p').setAttribute('aria-label', L ? 'Immagine precedente' : 'Previous image');
+    pdlg.querySelector('.lb-n').setAttribute('aria-label', L ? 'Immagine successiva' : 'Next image');
+    pshow(); pdlg.showModal();
+  }
+  function pshow() {
+    var im = plist[pidx], L = lang === 'it', i = pdlg.querySelector('img');
+    i.src = PBASE + 'assets/press/' + im.n + '.jpg';
+    i.alt = (L && im.c_it) || im.c;
+    pdlg.querySelector('.lb-c').textContent = (L && im.c_it) || im.c;
+    pdlg.querySelector('.lb-k').textContent = plist.length > 1 ? (pidx + 1) + ' / ' + plist.length : '';
+  }
+  function pgo(d) { pidx = (pidx + d + plist.length) % plist.length; pshow(); }
   function norm(s) { return s.replace(/\s+/g, ' ').trim(); }
   function parts(d) { var p = String(d).split('-'); return { y: p[0], m: p[1] ? parseInt(p[1], 10) : 0, d: p[2] ? parseInt(p[2], 10) : 0 }; }
   function key(it) { var p = parts(it.date); return p.y + String(p.m).padStart(2, '0') + String(p.d).padStart(2, '0'); }
@@ -121,6 +155,23 @@ document.querySelectorAll('.yt').forEach(function (b) {
         body.appendChild(h4);
         var text = (L && it.text_it) || it.text;
         if (text) { var pp = document.createElement('p'); pp.textContent = text; body.appendChild(pp); }
+        if (it.imgs && it.imgs.length) {
+          var th = document.createElement('div'); th.className = 'arch-thumbs';
+          it.imgs.forEach(function (im, k) {
+            var b = document.createElement('button'); b.type = 'button'; b.className = 'arch-th';
+            b.dataset.k = k;
+            b.setAttribute('aria-label', (L ? 'Ingrandisci: ' : 'Enlarge: ') + ((L && im.c_it) || im.c));
+            var tg = document.createElement('img');
+            tg.src = PBASE + 'assets/press/t/' + im.n + '.jpg'; tg.loading = 'lazy'; tg.decoding = 'async';
+            tg.alt = (L && im.c_it) || im.c;
+            b.appendChild(tg); th.appendChild(b);
+          });
+          th.addEventListener('click', function (e) {
+            var b = e.target.closest('.arch-th'); if (!b) return;
+            openPress(it.imgs, parseInt(b.dataset.k, 10), b);
+          });
+          body.appendChild(th);
+        }
         li.appendChild(day); li.appendChild(body); ul.appendChild(li);
         if (it.embed) { var emb = holder.querySelector('[data-embed="' + it.embed + '"]'); if (emb) li.appendChild(emb); }
       });
