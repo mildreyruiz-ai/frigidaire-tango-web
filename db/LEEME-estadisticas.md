@@ -24,3 +24,5 @@ Si ya creaste la tabla `plays` antes de esta versión, añade el país con (cons
 - Pide la ADMIN_KEY la primera vez; puedes marcar "Recordar en este dispositivo".
 
 **Instalarlo como app en el móvil:** Android (Chrome): menú ⋮ → *Instalar app* / *Añadir a pantalla de inicio*. iPhone (Safari): botón Compartir → *Añadir a pantalla de inicio*.
+
+**Clave de solo lectura para el grupo:** crea en cada proyecto una variable `VIEW_KEY` (Settings → Variables and secrets). Con ella se puede entrar al panel de estadísticas de ese sitio, pero no sirve para la newsletter ni para nada más. La `ADMIN_KEY` sigue funcionando y sigue siendo la única clave de administración.

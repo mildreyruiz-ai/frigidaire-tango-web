@@ -49,7 +49,9 @@ export async function onRequestGet({ request, env }) {
   const H = corsHeaders(request);
   const J = (o, s = 200) => new Response(JSON.stringify(o), { status: s, headers: { ...H, 'content-type': 'application/json; charset=utf-8' } });
   const k = request.headers.get('x-admin-key') || '';
-  if (!env.ADMIN_KEY || k !== env.ADMIN_KEY) return J({ error: 'auth' }, 401);
+  // ADMIN_KEY (full admin) or VIEW_KEY (read-only: can only see these stats) both open the dashboard
+  const good = (env.ADMIN_KEY && k === env.ADMIN_KEY) || (env.VIEW_KEY && k === env.VIEW_KEY);
+  if (!good) return J({ error: 'auth' }, 401);
   const db = env.LISTEN_DB;
   if (!db) return J({ error: 'no_db' }, 503);
 
