@@ -952,3 +952,15 @@ document.addEventListener('click', function (e) {
     return p;
   };
 })();
+
+/* Anonymous page views (no cookies, no IP, no visitor id) -> POST /api/view. Read in the private dashboard. */
+(function () {
+  try {
+    var p = location.pathname;
+    if (/^\/(admin|club)(\/|$)/.test(p) || /^(localhost|127\.0\.0\.1)$/.test(location.hostname)) return;
+    var ref = ''; try { ref = document.referrer ? new URL(document.referrer).hostname : ''; } catch (e) {}
+    if (ref === location.hostname) ref = '';
+    var j = JSON.stringify({ pg: p, lang: document.documentElement.lang === 'en' ? 'en' : 'it', ref: ref, w: window.innerWidth });
+    if (!(navigator.sendBeacon && navigator.sendBeacon('/api/view', new Blob([j], { type: 'application/json' })))) fetch('/api/view', { method: 'POST', body: j, headers: { 'content-type': 'application/json' }, keepalive: true });
+  } catch (e) {}
+})();

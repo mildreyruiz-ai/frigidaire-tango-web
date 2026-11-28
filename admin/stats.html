@@ -1,0 +1,350 @@
+<!doctype html>
+<html lang="es"><head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<meta name="robots" content="noindex, nofollow">
+<meta name="theme-color" content="#000000">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-title" content="Stats">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+<link rel="manifest" href="stats.webmanifest">
+<link rel="icon" href="stats-icon-192.png">
+<link rel="apple-touch-icon" href="stats-icon-192.png">
+<title>Estadísticas — Frigidaire Tango · The Vindicators</title>
+<style>
+:root{--bg:#000;--card:#0b0e12;--line:#1e2833;--tx:#e8eef4;--mut:#93a4b7;--ac:#e4352b;--ac2:#6fb1ff;--ok:#4cc38a}
+*{box-sizing:border-box}
+html{-webkit-text-size-adjust:100%}
+body{margin:0;background:var(--bg);color:var(--tx);font:15px/1.45 system-ui,-apple-system,Segoe UI,Roboto,Arial,sans-serif;padding:max(14px,env(safe-area-inset-top)) max(14px,env(safe-area-inset-right)) max(40px,env(safe-area-inset-bottom)) max(14px,env(safe-area-inset-left))}
+.wrap{max-width:980px;margin:0 auto}
+h1{font:400 26px/1.1 Impact,"Arial Narrow",sans-serif;letter-spacing:.04em;margin:6px 0 2px}
+h1 span{color:var(--ac)}
+.sub{color:var(--mut);font-size:13px;margin:0 0 14px}
+.seg{display:flex;gap:6px;flex-wrap:wrap;margin:10px 0}
+.seg button,.btn{appearance:none;border:1px solid var(--line);background:var(--card);color:var(--tx);padding:9px 14px;font:600 13px system-ui,sans-serif;border-radius:8px;cursor:pointer;min-height:40px}
+.seg button[aria-pressed=true]{background:var(--ac);border-color:var(--ac);color:#fff}
+.sites button[aria-pressed=true]{background:var(--ac);}
+.btn.go{background:var(--ac);border-color:var(--ac);color:#fff}
+.bar{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin:8px 0}
+input,select{background:#050505;border:1px solid var(--line);color:var(--tx);padding:9px 10px;border-radius:8px;font:16px system-ui,sans-serif;min-height:40px;max-width:100%}
+input[type=date]{font-size:14px}
+label.k{font-size:12px;color:var(--mut);letter-spacing:.08em;text-transform:uppercase;display:block;margin:12px 0 4px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:14px;margin:12px 0}
+.login{max-width:420px;margin:30px auto}
+.kpis{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;margin:12px 0}
+@media(min-width:700px){.kpis{grid-template-columns:repeat(4,minmax(0,1fr))}}
+.kpi{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:12px}
+.kpi b{display:block;font-size:26px;line-height:1.1;font-variant-numeric:tabular-nums}
+.kpi span{color:var(--mut);font-size:12px;letter-spacing:.06em;text-transform:uppercase}
+.kpi small{display:block;color:var(--mut);font-size:12px;margin-top:2px}
+.tabs{display:flex;gap:6px;overflow-x:auto;padding:2px 0 8px;margin:14px -2px 0;-webkit-overflow-scrolling:touch;scrollbar-width:none}
+.tabs::-webkit-scrollbar{display:none}
+.tabs button{flex:0 0 auto}
+.row{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 12px;padding:10px 0;border-bottom:1px solid var(--line);align-items:center}
+.row:last-child{border-bottom:0}
+.row .t{font-weight:600;overflow-wrap:anywhere}
+.row .n{font-variant-numeric:tabular-nums;font-weight:700;font-size:18px;text-align:right}
+.row .s{grid-column:1/-1;color:var(--mut);font-size:12.5px;overflow-wrap:anywhere}
+.row .b{grid-column:1/-1;height:6px;background:#10161d;border-radius:3px;overflow:hidden}
+.row .b i{display:block;height:100%;background:var(--ac);border-radius:3px}
+.row.click{cursor:pointer}
+.row .sub2{grid-column:1/-1;padding:4px 0 2px 12px;border-left:2px solid var(--line);margin-top:4px}
+.row .sub2 div{display:flex;justify-content:space-between;gap:10px;font-size:13px;color:var(--mut);padding:2px 0}
+.h3{font:600 12px system-ui;letter-spacing:.1em;text-transform:uppercase;color:var(--mut);margin:18px 0 4px}
+.h3:first-child{margin-top:0}
+.err{color:#ff8b84;padding:10px;border:1px solid #5a2320;border-radius:8px;margin:12px 0}
+.mut{color:var(--mut)}
+.empty{color:var(--mut);padding:16px 0;text-align:center}
+svg.ch{width:100%;height:auto;display:block}
+.leg{display:flex;gap:14px;font-size:12px;color:var(--mut);margin:0 0 6px;flex-wrap:wrap}
+.leg i{display:inline-block;width:10px;height:10px;border-radius:2px;margin-right:5px;vertical-align:-1px}
+.tools{display:flex;gap:8px;flex-wrap:wrap;margin:0 0 6px}
+.tools input{flex:1 1 160px}
+.chk{display:flex;gap:6px;align-items:center;color:var(--mut);font-size:13px}
+.chk input{min-height:0;width:18px;height:18px}
+.foot{color:var(--mut);font-size:12px;margin-top:26px;line-height:1.6}
+[hidden]{display:none!important}
+</style></head><body>
+<div class="wrap">
+<h1>Estadísticas <span>·</span> web</h1>
+<p class="sub">Privado. Escuchas por tema y disco, visitas por página y país. Sin cookies ni datos personales.</p>
+
+<div class="seg sites" id="sites" role="group" aria-label="Sitio">
+  <button type="button" data-s="ft" aria-pressed="true">Frigidaire Tango</button>
+  <button type="button" data-s="vi" aria-pressed="false">The Vindicators</button>
+</div>
+
+<div class="card login" id="login" hidden>
+  <label class="k" for="key">Clave (ADMIN_KEY) de <span id="lsite"></span></label>
+  <input id="key" type="password" autocomplete="off" style="width:100%">
+  <label class="chk" style="margin-top:10px"><input type="checkbox" id="rem"> Recordar en este dispositivo</label>
+  <div class="bar"><button class="btn go" id="enter" type="button">Entrar</button></div>
+  <p class="mut" style="font-size:13px;margin:6px 0 0">Es la misma ADMIN_KEY que usas para la newsletter. Cada sitio tiene la suya si las configuraste distintas.</p>
+</div>
+
+<div id="app" hidden>
+  <div class="seg" id="range" role="group" aria-label="Periodo">
+    <button type="button" data-d="7">7 días</button>
+    <button type="button" data-d="30" aria-pressed="true">30 días</button>
+    <button type="button" data-d="90">90 días</button>
+    <button type="button" data-d="365">1 año</button>
+    <button type="button" data-d="c">Personalizado</button>
+  </div>
+  <div class="bar" id="custom" hidden>
+    <input type="date" id="from" aria-label="Desde"> <span class="mut">→</span> <input type="date" id="to" aria-label="Hasta">
+    <button class="btn" id="apply" type="button">Aplicar</button>
+  </div>
+  <div class="bar"><span class="mut" id="period"></span><button class="btn" id="reload" type="button">Actualizar</button><button class="btn" id="logout" type="button">Cambiar clave</button></div>
+
+  <div id="msg"></div>
+  <div class="kpis" id="kpis"></div>
+  <div class="card"><div class="leg"><span><i style="background:var(--ac2)"></i>Visitas a páginas</span><span><i style="background:var(--ac)"></i>Escuchas</span></div><div id="chart"></div></div>
+
+  <div class="tabs" id="tabs" role="tablist">
+    <button type="button" data-t="tracks" class="btn">Temas</button>
+    <button type="button" data-t="albums" class="btn">Discos</button>
+    <button type="button" data-t="pages" class="btn">Páginas</button>
+    <button type="button" data-t="countries" class="btn">Países</button>
+    <button type="button" data-t="origin" class="btn">Origen</button>
+  </div>
+  <div class="card" id="view"></div>
+</div>
+
+<p class="foot">Las visitas y escuchas se cuentan de forma anónima (sin cookies, sin IP, sin identificador de visitante), así que no hay "visitantes únicos": cada carga de página es una visita. Los bots se ignoran. Escuchas = reproducciones desde el reproductor de la web y del widget; los clics a Spotify/Deezer/YouTube se muestran aparte.</p>
+</div>
+
+<script>
+(function () {
+  'use strict';
+  var SITES = {
+    ft: { name: 'Frigidaire Tango', api: 'https://frigidairetango.com/api/stats', ac: '#e4352b' },
+    vi: { name: 'The Vindicators', api: 'https://thevindicators.it/api/stats', ac: '#ffc400' }
+  };
+  var $ = function (id) { return document.getElementById(id); };
+  var nf = new Intl.NumberFormat('es');
+  var st = { site: 'ft', days: 30, from: '', to: '', tab: 'tracks', data: null, q: '', album: '', sort: 'plays', merge: false, more: 150, openPage: null };
+  try { var s0 = localStorage.getItem('stats_site'); if (SITES[s0]) st.site = s0; } catch (e) {}
+
+  function el(tag, cls, text) { var e = document.createElement(tag); if (cls) e.className = cls; if (text != null) e.textContent = text; return e; }
+  function ymd(d) { return d.toISOString().slice(0, 10); }
+  function mmss(s) { s = Math.round(s || 0); return Math.floor(s / 60) + ':' + ('0' + (s % 60)).slice(-2); }
+  function hm(s) { s = Math.round(s || 0); var h = Math.floor(s / 3600), m = Math.round((s % 3600) / 60); return h ? h + ' h ' + m + ' min' : m + ' min'; }
+  function getKey() { try { return sessionStorage.getItem('stats_key_' + st.site) || localStorage.getItem('stats_key_' + st.site) || ''; } catch (e) { return ''; } }
+  function setKey(k, remember) { try { sessionStorage.setItem('stats_key_' + st.site, k); if (remember) localStorage.setItem('stats_key_' + st.site, k); else localStorage.removeItem('stats_key_' + st.site); } catch (e) {} }
+  function clearKey() { try { sessionStorage.removeItem('stats_key_' + st.site); localStorage.removeItem('stats_key_' + st.site); } catch (e) {} }
+
+  var regionNames = null; try { regionNames = new Intl.DisplayNames(['es'], { type: 'region' }); } catch (e) {}
+  function country(c) {
+    if (!c || c === '??' || !/^[A-Z]{2}$/.test(c)) return { f: '🌐', n: 'Desconocido' };
+    var f = String.fromCodePoint(0x1F1E6 + c.charCodeAt(0) - 65, 0x1F1E6 + c.charCodeAt(1) - 65), n = c;
+    try { if (regionNames) n = regionNames.of(c) || c; } catch (e) {}
+    return { f: f, n: n };
+  }
+
+  /* ---------- load ---------- */
+  function range() {
+    var to = new Date(), from;
+    if (st.days === 'c') return { from: st.from, to: st.to };
+    from = new Date(Date.now() - (st.days - 1) * 86400000);
+    return { from: ymd(from), to: ymd(to) };
+  }
+  function load() {
+    var key = getKey();
+    $('login').hidden = !!key; $('app').hidden = !key; $('lsite').textContent = SITES[st.site].name;
+    document.documentElement.style.setProperty('--ac', SITES[st.site].ac);
+    document.querySelector('meta[name=theme-color]').content = '#000000';
+    if (!key) return;
+    var r = range();
+    if (!r.from || !r.to) { $('msg').textContent = ''; return; }
+    $('period').textContent = r.from + ' → ' + r.to;
+    $('msg').textContent = ''; $('kpis').textContent = ''; $('view').textContent = 'Cargando…'; $('chart').textContent = '';
+    var site = st.site;
+    fetch(SITES[site].api + '?from=' + r.from + '&to=' + r.to, { headers: { 'x-admin-key': key }, cache: 'no-store' })
+      .then(function (res) { return res.json().catch(function () { return {}; }).then(function (d) { return { s: res.status, d: d }; }); })
+      .then(function (x) {
+        if (site !== st.site) return;
+        if (x.s === 401) { clearKey(); load(); var m = el('div', 'err', 'Clave incorrecta.'); $('login').insertBefore(m, $('login').firstChild); return; }
+        if (x.s === 503) return fail('La base de datos de este sitio todavía no está conectada (falta el binding LISTEN_DB en Cloudflare). Mira el archivo LEEME de db/.');
+        if (x.s !== 200) return fail('El servidor respondió con un error (' + x.s + '). Si acabas de subir el sitio, espera a que termine el deploy.');
+        st.data = x.d; st.more = 150; st.openPage = null; render();
+      })
+      .catch(function () { fail('No se pudo conectar con ' + SITES[site].api.replace('/api/stats', '') + '. ¿Está publicada la función /api/stats? (hay que hacer deploy del sitio con la carpeta functions).'); });
+  }
+  function fail(t) { $('view').textContent = ''; $('kpis').textContent = ''; $('chart').textContent = ''; $('msg').textContent = ''; $('msg').appendChild(el('div', 'err', t)); }
+
+  /* ---------- render ---------- */
+  function render() {
+    var d = st.data; if (!d) return;
+    var t = d.totals, cnt = (t.site || 0) + (t.widget || 0);
+    var kp = $('kpis'); kp.textContent = '';
+    [[nf.format(t.views), 'Visitas', 'cargas de página'],
+     [nf.format(t.plays), 'Escuchas', nf.format(t.site) + ' en la web · ' + nf.format(t.widget) + ' widget'],
+     [hm(t.secs), 'Tiempo escuchado', t.site ? 'media ' + mmss(t.secs / t.site) + ' por escucha' : '—'],
+     [t.site ? Math.round((t.done || 0) / t.site * 100) + '%' : '—', 'Terminadas', nf.format(t.link) + ' clics a plataformas']
+    ].forEach(function (k) { var c = el('div', 'kpi'); c.appendChild(el('span', '', k[1])); c.appendChild(el('b', '', k[0])); c.appendChild(el('small', '', k[2])); kp.appendChild(c); });
+    chart(d); tabs(); view();
+  }
+
+  function chart(d) {
+    var days = [], a = new Date(d.from + 'T00:00:00Z'), b = new Date(d.to + 'T00:00:00Z');
+    for (var x = a; x <= b && days.length < 400; x = new Date(x.getTime() + 86400000)) days.push(ymd(x));
+    var V = {}, P = {}; d.daily.views.forEach(function (r) { V[r.d] = r.n; }); d.daily.plays.forEach(function (r) { P[r.d] = r.n || 0; });
+    var max = 1; days.forEach(function (k) { max = Math.max(max, V[k] || 0, P[k] || 0); });
+    var W = 640, H = 190, pl = 34, pb = 22, pt = 8, iw = W - pl - 6, ih = H - pb - pt, bw = iw / days.length;
+    var s = '<svg class="ch" viewBox="0 0 ' + W + ' ' + H + '" role="img" aria-label="Visitas y escuchas por día">';
+    for (var i = 0; i <= 3; i++) { var yy = pt + ih - ih * i / 3, v = Math.round(max * i / 3); s += '<line x1="' + pl + '" x2="' + W + '" y1="' + yy + '" y2="' + yy + '" stroke="#1e2833"/><text x="' + (pl - 6) + '" y="' + (yy + 4) + '" fill="#93a4b7" font-size="11" text-anchor="end">' + v + '</text>'; }
+    var pts = [];
+    days.forEach(function (k, j) {
+      var v = V[k] || 0, h = ih * v / max, x0 = pl + j * bw;
+      s += '<rect x="' + (x0 + bw * 0.12).toFixed(2) + '" y="' + (pt + ih - h).toFixed(2) + '" width="' + Math.max(1, bw * 0.76).toFixed(2) + '" height="' + h.toFixed(2) + '" fill="#6fb1ff" opacity=".75"><title>' + k + ': ' + v + ' visitas, ' + (P[k] || 0) + ' escuchas</title></rect>';
+      pts.push((x0 + bw / 2).toFixed(2) + ',' + (pt + ih - ih * (P[k] || 0) / max).toFixed(2));
+    });
+    s += '<polyline points="' + pts.join(' ') + '" fill="none" stroke="var(--ac)" stroke-width="2.2" stroke-linejoin="round"/>';
+    var step = Math.max(1, Math.ceil(days.length / 6));
+    days.forEach(function (k, j) { if (j % step === 0) s += '<text x="' + (pl + j * bw + bw / 2).toFixed(1) + '" y="' + (H - 6) + '" fill="#93a4b7" font-size="11" text-anchor="middle">' + k.slice(5) + '</text>'; });
+    $('chart').innerHTML = s + '</svg>';
+    if (!d.totals.views && !d.totals.plays) { var e = el('div', 'empty', 'Todavía no hay datos en este periodo. Aparecerán cuando alguien visite la web o escuche un tema.'); $('chart').appendChild(e); }
+  }
+
+  function tabs() {
+    Array.prototype.forEach.call($('tabs').children, function (b) { b.style.background = b.dataset.t === st.tab ? 'var(--ac)' : ''; b.style.borderColor = b.dataset.t === st.tab ? 'var(--ac)' : ''; b.setAttribute('aria-selected', b.dataset.t === st.tab); });
+  }
+
+  function row(title, num, sub, pct) {
+    var r = el('div', 'row'); r.appendChild(el('div', 't', title)); r.appendChild(el('div', 'n', num));
+    if (sub) r.appendChild(el('div', 's', sub));
+    if (pct != null) { var b = el('div', 'b'), i = el('i'); i.style.width = Math.max(0, Math.min(100, pct)) + '%'; b.appendChild(i); r.appendChild(b); }
+    return r;
+  }
+  function csv(name, head, rows) {
+    var out = [head].concat(rows).map(function (r) { return r.map(function (c) { c = String(c == null ? '' : c); return /[",;\n]/.test(c) ? '"' + c.replace(/"/g, '""') + '"' : c; }).join(','); }).join('\n');
+    var a = document.createElement('a'); a.href = URL.createObjectURL(new Blob(['﻿' + out], { type: 'text/csv' })); a.download = SITES[st.site].name.replace(/\s+/g, '-').toLowerCase() + '-' + name + '-' + st.data.from + '_' + st.data.to + '.csv';
+    document.body.appendChild(a); a.click(); setTimeout(function () { a.remove(); URL.revokeObjectURL(a.href); }, 500);
+  }
+  function csvBtn(fn) { var b = el('button', 'btn', 'Descargar CSV'); b.type = 'button'; b.addEventListener('click', fn); return b; }
+
+  function view() {
+    var v = $('view'); v.textContent = ''; var d = st.data;
+    if (st.tab === 'tracks') return vTracks(v, d);
+    if (st.tab === 'albums') return vAlbums(v, d);
+    if (st.tab === 'pages') return vPages(v, d);
+    if (st.tab === 'countries') return vCountries(v, d);
+    return vOrigin(v, d);
+  }
+
+  function plays(t) { return t.site + t.widget; }
+  function vTracks(v, d) {
+    var tools = el('div', 'tools'), q = el('input'), sel = el('select'), so = el('select');
+    q.type = 'search'; q.placeholder = 'Buscar tema…'; q.value = st.q;
+    var albums = {}; d.tracks.forEach(function (t) { albums[t.album] = 1; });
+    sel.appendChild(new Option('Todos los discos', '')); Object.keys(albums).sort().forEach(function (a) { sel.appendChild(new Option(a, a)); }); sel.value = st.album;
+    [['plays', 'Más escuchados'], ['secs', 'Más tiempo'], ['done', 'Más terminados'], ['name', 'Nombre']].forEach(function (o) { so.appendChild(new Option(o[1], o[0])); }); so.value = st.sort;
+    tools.appendChild(q); tools.appendChild(sel); tools.appendChild(so); v.appendChild(tools);
+    var list = el('div');
+    function draw() {
+      list.textContent = '';
+      var rows = d.tracks.filter(function (t) { return (!st.album || t.album === st.album) && (!st.q || (t.title + ' ' + t.album).toLowerCase().indexOf(st.q.toLowerCase()) > -1); });
+      rows.sort(function (a, b) { if (st.sort === 'name') return a.title.localeCompare(b.title); if (st.sort === 'secs') return b.secs - a.secs; if (st.sort === 'done') return b.done - a.done || plays(b) - plays(a); return plays(b) - plays(a) || b.secs - a.secs || a.album.localeCompare(b.album) || (a.pos || 0) - (b.pos || 0); });
+      var max = 1; rows.forEach(function (t) { max = Math.max(max, plays(t)); });
+      if (!rows.length) list.appendChild(el('div', 'empty', 'Sin temas para este filtro.'));
+      rows.slice(0, st.more).forEach(function (t) {
+        var sub = t.album + ' · web ' + t.site + (t.widget ? ' · widget ' + t.widget : '') + (t.link ? ' · clics ' + t.link : '') + (t.site ? ' · media ' + mmss(t.secs / t.site) + (t.dur ? ' de ' + mmss(t.dur) : '') + ' · terminada ' + Math.round(t.done / t.site * 100) + '%' : '');
+        list.appendChild(row(t.title, nf.format(plays(t)), sub, plays(t) / max * 100));
+      });
+      if (rows.length > st.more) { var m = el('button', 'btn', 'Mostrar más (' + (rows.length - st.more) + ')'); m.type = 'button'; m.addEventListener('click', function () { st.more += 150; draw(); }); list.appendChild(m); }
+      list.dataset.n = rows.length; list._rows = rows;
+    }
+    q.addEventListener('input', function () { st.q = q.value; st.more = 150; draw(); });
+    sel.addEventListener('change', function () { st.album = sel.value; st.more = 150; draw(); });
+    so.addEventListener('change', function () { st.sort = so.value; draw(); });
+    v.appendChild(list); draw();
+    v.appendChild(csvBtn(function () { csv('temas', ['Tema', 'Disco', 'Escuchas web', 'Escuchas widget', 'Clics plataformas', 'Segundos', 'Terminadas'], list._rows.map(function (t) { return [t.title, t.album, t.site, t.widget, t.link, t.secs, t.done]; })); }));
+  }
+
+  function albumsAgg(d) {
+    var A = {}; d.tracks.forEach(function (t) { var a = A[t.album] = A[t.album] || { name: t.album, plays: 0, link: 0, secs: 0, n: 0, played: 0, top: null }; a.plays += plays(t); a.link += t.link; a.secs += t.secs; a.n++; if (plays(t) > 0) a.played++; if (plays(t) > 0 && (!a.top || plays(t) > plays(a.top))) a.top = t; });
+    return Object.keys(A).map(function (k) { return A[k]; }).sort(function (x, y) { return y.plays - x.plays || x.name.localeCompare(y.name); });
+  }
+  function vAlbums(v, d) {
+    var rows = albumsAgg(d), max = 1; rows.forEach(function (a) { max = Math.max(max, a.plays); });
+    if (!rows.length) v.appendChild(el('div', 'empty', 'Sin datos todavía.'));
+    rows.forEach(function (a) {
+      var r = row(a.name, nf.format(a.plays), a.played + ' de ' + a.n + ' temas escuchados · ' + hm(a.secs) + (a.top ? ' · el más escuchado: ' + a.top.title + ' (' + plays(a.top) + ')' : '') + (a.link ? ' · clics ' + a.link : ''), a.plays / max * 100);
+      r.classList.add('click'); r.addEventListener('click', function () { st.tab = 'tracks'; st.album = a.name; st.q = ''; tabs(); view(); window.scrollTo({ top: $('tabs').offsetTop - 8, behavior: 'smooth' }); });
+      v.appendChild(r);
+    });
+    v.appendChild(el('p', 'mut', 'Toca un disco para ver sus temas.'));
+    v.appendChild(csvBtn(function () { csv('discos', ['Disco', 'Escuchas', 'Temas', 'Temas escuchados', 'Segundos', 'Clics'], rows.map(function (a) { return [a.name, a.plays, a.n, a.played, a.secs, a.link]; })); }));
+  }
+
+  function mergePg(pg) { return st.merge ? (pg.replace(/^\/en(\/|$)/, '/') || '/') : pg; }
+  function vPages(v, d) {
+    var tools = el('div', 'tools'), lb = el('label', 'chk'), cb = el('input'); cb.type = 'checkbox'; cb.checked = st.merge; lb.appendChild(cb); lb.appendChild(document.createTextNode('Unir versión IT + EN')); tools.appendChild(lb); v.appendChild(tools);
+    cb.addEventListener('change', function () { st.merge = cb.checked; st.openPage = null; view(); });
+    var P = {}, PC = {};
+    d.pages.forEach(function (r) { var k = mergePg(r.pg); P[k] = (P[k] || 0) + r.n; });
+    d.pagecountry.forEach(function (r) { var k = mergePg(r.pg); (PC[k] = PC[k] || {})[r.c] = ((PC[k] || {})[r.c] || 0) + r.n; });
+    var rows = Object.keys(P).map(function (k) { return { pg: k, n: P[k] }; }).sort(function (a, b) { return b.n - a.n; }), tot = d.totals.views || 1, max = rows.length ? rows[0].n : 1;
+    if (!rows.length) v.appendChild(el('div', 'empty', 'Todavía no hay visitas en este periodo.'));
+    rows.forEach(function (r) {
+      var rw = row(r.pg === '/' ? '/ (inicio)' : r.pg, nf.format(r.n), Math.round(r.n / tot * 100) + '% del total · toca para ver países', r.n / max * 100);
+      rw.classList.add('click');
+      rw.addEventListener('click', function () {
+        var ex = rw.querySelector('.sub2'); if (ex) { ex.remove(); return; }
+        var box = el('div', 'sub2'), cs = PC[r.pg] || {};
+        Object.keys(cs).sort(function (a, b) { return cs[b] - cs[a]; }).slice(0, 12).forEach(function (c) { var x = country(c), line = el('div'); line.appendChild(el('span', '', x.f + ' ' + x.n)); line.appendChild(el('b', '', nf.format(cs[c]))); box.appendChild(line); });
+        if (!Object.keys(cs).length) box.appendChild(el('div', '', 'Sin datos de país.'));
+        rw.appendChild(box);
+      });
+      v.appendChild(rw);
+    });
+    v.appendChild(csvBtn(function () { csv('paginas', ['Página', 'Visitas'], rows.map(function (r) { return [r.pg, r.n]; })); }));
+  }
+
+  function listCountries(v, title, arr, totalLabel) {
+    v.appendChild(el('div', 'h3', title));
+    var tot = 0, max = 1; arr.forEach(function (r) { tot += r.n || 0; max = Math.max(max, r.n || 0); });
+    if (!tot) { v.appendChild(el('div', 'empty', 'Sin datos todavía.')); return; }
+    arr.forEach(function (r) { var x = country(r.c); v.appendChild(row(x.f + ' ' + x.n, nf.format(r.n), Math.round(r.n / tot * 100) + '% ' + totalLabel, r.n / max * 100)); });
+  }
+  function vCountries(v, d) {
+    listCountries(v, 'Visitas por país', d.countries.views, 'de las visitas');
+    listCountries(v, 'Escuchas por país', d.countries.plays, 'de las escuchas');
+    v.appendChild(csvBtn(function () { csv('paises', ['País', 'Código', 'Visitas'], d.countries.views.map(function (r) { return [country(r.c).n, r.c, r.n]; })); }));
+  }
+
+  function vOrigin(v, d) {
+    function block(title, arr, nameFn) {
+      v.appendChild(el('div', 'h3', title));
+      var tot = 0, max = 1; arr.forEach(function (r) { tot += r.n; max = Math.max(max, r.n); });
+      if (!tot) { v.appendChild(el('div', 'empty', 'Sin datos todavía.')); return; }
+      arr.forEach(function (r) { v.appendChild(row(nameFn(r), nf.format(r.n), Math.round(r.n / tot * 100) + '%', r.n / max * 100)); });
+    }
+    block('Idioma de la página', d.langs.map(function (r) { return { k: r.l, n: r.n }; }), function (r) { return r.k === 'en' ? 'Inglés (EN)' : 'Italiano (IT)'; });
+    block('Dispositivo', d.devices.map(function (r) { return { k: r.d, n: r.n }; }), function (r) { return r.k === 'mobile' ? 'Móvil' : r.k === 'desktop' ? 'Ordenador' : 'Desconocido'; });
+    block('De dónde llegan', d.refs.map(function (r) { return { k: r.r, n: r.n }; }), function (r) { return r.k || 'Directo / sin referencia'; });
+  }
+
+  /* ---------- events ---------- */
+  $('sites').addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; st.site = b.dataset.s; try { localStorage.setItem('stats_site', st.site); } catch (x) {} sync(); st.data = null; st.q = ''; st.album = ''; load(); });
+  $('range').addEventListener('click', function (e) {
+    var b = e.target.closest('button'); if (!b) return; var d = b.dataset.d;
+    if (d === 'c') { st.days = 'c'; $('custom').hidden = false; if (!$('from').value) { $('to').value = ymd(new Date()); $('from').value = ymd(new Date(Date.now() - 29 * 86400000)); } sync(); return; }
+    st.days = +d; $('custom').hidden = true; sync(); load();
+  });
+  $('apply').addEventListener('click', function () { st.from = $('from').value; st.to = $('to').value; if (st.from && st.to && st.from <= st.to) load(); });
+  $('tabs').addEventListener('click', function (e) { var b = e.target.closest('button'); if (!b) return; st.tab = b.dataset.t; tabs(); view(); });
+  $('enter').addEventListener('click', function () { var k = $('key').value.trim(); if (!k) return; setKey(k, $('rem').checked); $('key').value = ''; var er = $('login').querySelector('.err'); if (er) er.remove(); load(); });
+  $('key').addEventListener('keydown', function (e) { if (e.key === 'Enter') $('enter').click(); });
+  $('reload').addEventListener('click', load);
+  $('logout').addEventListener('click', function () { clearKey(); st.data = null; load(); });
+  function sync() {
+    Array.prototype.forEach.call($('sites').children, function (b) { b.setAttribute('aria-pressed', b.dataset.s === st.site); });
+    Array.prototype.forEach.call($('range').children, function (b) { b.setAttribute('aria-pressed', String(b.dataset.d) === String(st.days)); });
+  }
+  sync(); load();
+  if ('serviceWorker' in navigator) navigator.serviceWorker.register('stats-sw.js', { scope: './' }).catch(function () {});
+})();
+</script>
+</body></html>

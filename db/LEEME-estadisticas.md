@@ -12,3 +12,15 @@ Ver el reporte cuando quieras (navegador): `https://frigidairetango.com/api/list
 (otros: `type=monthly`, `type=custom&from=2026-11-01&to=2026-11-20`, `&format=json`, `&send=1` para que lo mande por email ahora).
 
 Si ya creaste la tabla `plays` antes de esta versión, añade el país con (consola D1): `ALTER TABLE plays ADD COLUMN country TEXT;`
+
+---
+## Panel de estadísticas y visitas por página (añadido)
+
+**Una sola vez, en la consola de la misma base de datos D1 (`frigidaire-listens`):** pega y ejecuta `db/schema-views.sql` (crea la tabla `views`). Después publica el sitio completo (incluye `functions/` y `admin/`).
+
+**Panel privado (ordenador y móvil):** https://frigidairetango.com/admin/stats.html
+- Botones para elegir **Frigidaire Tango** o **The Vindicators** (Vindicators necesita su propia base de datos: ver `LEEME-estadisticas.md` en ese sitio).
+- Vistas: Temas (con filtro por disco/sesión), Discos, Páginas (con países de cada página), Países, Origen (idioma, móvil/ordenador, de dónde llegan). Gráfico por día y exportación a CSV.
+- Pide la ADMIN_KEY la primera vez; puedes marcar "Recordar en este dispositivo".
+
+**Instalarlo como app en el móvil:** Android (Chrome): menú ⋮ → *Instalar app* / *Añadir a pantalla de inicio*. iPhone (Safari): botón Compartir → *Añadir a pantalla de inicio*.
