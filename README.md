@@ -145,3 +145,5 @@ Sitio web oficial y bilingüe (italiano e inglés) de Frigidaire Tango, publicad
 **Técnica:** HTML, CSS y JavaScript sin framework; Cloudflare Pages con despliegue automático desde GitHub; funciones serverless y almacenamiento KV; envío de correo con Resend y dominio verificado.
 
 **SEO y marketing:** URLs limpias, sitemap con hreflang, datos estructurados, `llms.txt` para buscadores con IA y una estrategia de audiencia propia basada en la newsletter y en el archivo histórico como contenido exclusivo.
+
+
