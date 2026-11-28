@@ -51,6 +51,7 @@ document.querySelectorAll('.yt').forEach(function (b) {
   var I = window.FT_I18N;
   var data = (window.FT_NEWS||[]).slice();
   var root = document.getElementById('archive-root');
+  if (root && root.dataset.kinds) { var ks = root.dataset.kinds.split(','); data = data.filter(function (x) { return ks.indexOf(x.kind) > -1; }); }
   var SEL = 'h1,h2,h3,h4,p,dt,dd,figcaption,.tag,.eyebrow,.role,.y,.src,.btn,header nav a,blockquote,.meta,.date b,.date span,.press a,.logo,footer div,.rollhead .ct,.rollhead .rsub,.arch-howto,.ytlink,.vid h3,.back,.chl,.more,.tnews .go,.cform label,.cform button,.cnote,.cinfo h3,.legal a,.priv h3,.priv p,.priv li';
   var MONTHS = { en: ['January','February','March','April','May','June','July','August','September','October','November','December'],
                  it: ['Gennaio','Febbraio','Marzo','Aprile','Maggio','Giugno','Luglio','Agosto','Settembre','Ottobre','Novembre','Dicembre'] };
